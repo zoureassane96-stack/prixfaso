@@ -108,7 +108,29 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 <h2>Publier une annonce</h2>
 <div class="box" style="display:block;max-width:650px;margin:auto">
 <div class="field"><label>Titre</label><input id="adTitle" placeholder="Ex. Sac de ciment 50 kg"></div>
-<div class="field"><label>Catégorie</label><select id="adCat"><option>Matériaux</option><option>Immobilier</option><option>Véhicules</option><option>Électronique</option><option>Services</option><option>Alimentation</option></select></div>
+
+  <div class="field">
+<label>Type d'annonce</label>
+<select id="adType" onchange="toggleMetier()">
+<option value="produit">🛒 Produit</option>
+<option value="service">🛠️ Service</option>
+</select>
+</div>
+
+<div class="field" id="metierBlock" style="display:none">
+<label>Métier</label>
+<select id="adMetier">
+<option value="Maçon">🧱 Maçon</option>
+<option value="Électricien">⚡ Électricien</option>
+<option value="Plombier">🚰 Plombier</option>
+<option value="Peintre">🎨 Peintre</option>
+<option value="Menuisier">🔨 Menuisier</option>
+<option value="Carreleur">🧱 Carreleur</option>
+<option value="Soudeur">🔧 Soudeur</option>
+<option value="Terrassier">🚜 Terrassier</option>
+<option value="Autre">🔧 Autre</option>
+</select>
+</div><div class="field"><label>Catégorie</label><select id="adCat"><option>Matériaux</option><option>Immobilier</option><option>Véhicules</option><option>Électronique</option><option>Services</option><option>Alimentation</option></select></div>
 <div class="field"><label>Prix (FCFA)</label><input id="adPrice" type="number" placeholder="15000"></div>
 <div class="field"><label>Ville</label><select id="adCity"><option>Ouagadougou</option><option>Bobo-Dioulasso</option><option>Koudougou</option><option>Banfora</option><option>Ouahigouya</option><option>Fada N'Gourma</option></select></div>
 <div class="field"><label>Description</label><textarea id="adDesc" rows="4" placeholder="Décrivez votre produit ou service"></textarea></div>
@@ -477,7 +499,13 @@ async function login(){
  }catch(e){console.error(e);toast(e.message||"Identifiants incorrects")}
 }
 async function logout(){await supabaseClient.auth.signOut();current=null;fav=[];ads=[];updateAccount();render();go("home");toast("Déconnexion effectuée")}
-function updateAccount(){document.getElementById("account").innerHTML=current?`<button onclick="go('dashboard')">👤 ${esc((current.name||"Utilisateur").split(" ")[0])}${unreadBadge()}</button><button class="outline" onclick="logout()">Déconnexion</button>`:`<button class="outline" onclick="openModal('login')">Connexion</button><button class="primary" onclick="openModal('register')">Inscription</button>`}
+function toggleMetier(){
+  const type=document.getElementById("adType")?.value;
+  const block=document.getElementById("metierBlock");
+  if(block){
+    block.style.display=type==="service"?"block":"none";
+  }
+  }function updateAccount(){document.getElementById("account").innerHTML=current?`<button onclick="go('dashboard')">👤 ${esc((current.name||"Utilisateur").split(" ")[0])}${unreadBadge()}</button><button class="outline" onclick="logout()">Déconnexion</button>`:`<button class="outline" onclick="openModal('login')">Connexion</button><button class="primary" onclick="openModal('register')">Inscription</button>`}
 
 async function ensureProfile(user,name,phone){
  const {error}=await supabaseClient.from("profiles").upsert({id:user.id,name,phone},{onConflict:"id"});
@@ -536,10 +564,10 @@ async function publishAd(){
  if(!current){openModal("login");return}
  let title=document.getElementById("adTitle").value.trim(),price=Number(document.getElementById("adPrice").value),desc=document.getElementById("adDesc").value.trim();
  if(!title||!price){toast("Ajoutez un titre et un prix");return}
- let category=document.getElementById("adCat").value,city=document.getElementById("adCity").value;
+let category=document.getElementById("adCat").value,city=document.getElementById("adCity").value,type=document.getElementById("adType")?.value||"produit",metier=type==="service"?(document.getElementById("adMetier")?.value||""):"";;
  try{
-  const {error}=await supabaseClient.from("annonces").insert({user_id:current.id,title,category,price,city,description:desc});
-  if(error)throw error;
+const {error}=await supabaseClient.from("annonces").insert({user_id:current.id,title,category,price,city,description:desc,type,metier});
+   if(error)throw error;
   document.querySelectorAll("#publier input,#publier textarea").forEach(x=>x.value="");
   await loadCloudData();toast("Annonce publiée");go("annonces");
  }catch(e){console.error(e);toast(e.message||"Impossible de publier l'annonce")}
