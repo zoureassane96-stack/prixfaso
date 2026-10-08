@@ -548,9 +548,53 @@ function go(id){document.querySelectorAll(".dash").forEach(x=>x.classList.remove
 async function renderDash(){
  await loadMessages();
  let mine=ads.filter(a=>a.owner===current.id),favs=ads.filter(a=>fav.includes(a.id));
- document.getElementById("dashContent").innerHTML=`<div class="features"><div class="feature">👤<b>${esc(current.name)}</b><span>${esc(current.phone)}</span></div><div class="feature">📢<b>${mine.length} annonce(s)</b><span>Vos publications</span></div><div class="feature">❤️<b>${favs.length} favori(s)</b><span>Vos annonces sauvegardées</span></div><div class="feature" onclick="openMessages()" style="cursor:pointer">💬<b>${unreadCount()} non lu(s)</b><span>Ouvrir votre messagerie</span></div></div><div class="section"><h3>Mes annonces</h3>${mine.length?`<div class="grid">${mine.map(a=>`<article class="card"><div class="body"><b>${esc(a.title)}</b><p class="price">${money(a.price)}</p><button class="small" onclick="deleteAd('${a.id}')">Supprimer</button></div></article>`).join("")}</div>`:'<div class="empty">Vous n’avez pas encore publié d’annonce.</div>'}<div class="section"><h3>❤️ Mes favoris</h3>${favs.length?`<div class="grid">${favs.map(a=>`<article class="card"><div class="body"><div class="row"><strong>${esc(a.title)}</strong><button class="heart" onclick="toggleFav('${a.id}')">❤️</button></div><div class="meta">📍 ${esc(a.city)} · ${esc(a.cat)}</div><div class="price">${money(a.price)}</div><p class="meta">${esc(a.desc||"")}</p><div class="row"><button class="small" onclick="viewAd('${a.id}')">Voir l’annonce</button><button class="small" onclick="contactAd('${a.id}')">💬 Contacter</button></div></div></article>`).join("")}</div>`:'<div class="empty">Vous n’avez pas encore de favori. Appuyez sur ♡ sur une annonce pour la sauvegarder.</div>'}</div><div class="section"><h3>Messages</h3>${renderMessages()}</div></div>`;
+document.getElementById("dashContent").innerHTML=`<div class="features"><div class="feature">👤<b>${esc(current.name)}</b><span>${esc(current.phone)}</span></div><div class="feature">📢<b>${mine.length} annonce(s)</b><span>Vos publications</span></div><div class="feature">❤️<b>${favs.length} favori(s)</b><span>Vos annonces sauvegardées</span></div><div class="feature" onclick="openMessages()" style="cursor:pointer">💬<b>${unreadCount()} non lu(s)</b><span>Ouvrir votre messagerie</span></div></div><div class="section"><h3>Mes annonces</h3>${mine.length?`<div class="grid">${mine.map(a=>`<article class="card"><div class="body"><b>${esc(a.title)}</b><p class="price">${money(a.price)}</p><p class="meta">${a.status==="sold"?"🔴 Vendu":"🟢 Disponible"}</p><div class="row"><button class="small" onclick="editAd('${a.id}')">✏️ Modifier</button>${a.status==="sold"?`<button class="small" onclick="updateAdStatus('${a.id}','active')">🔄 Réactiver</button>`:`<button class="small" onclick="updateAdStatus('${a.id}','sold')">✅ Vendu</button>`}<button class="small" onclick="deleteAd('${a.id}')">Supprimer</button></div></div></article>`).join("")}</div>`:'<div class="empty">Vous n’avez pas encore publié d’annonce.</div>'}<div class="section"><h3>❤️ Mes favoris</h3>${favs.length?`<div class="grid">${favs.map(a=>`<article class="card"><div class="body"><div class="row"><strong>${esc(a.title)}</strong><button class="heart" onclick="toggleFav('${a.id}')">❤️</button></div><div class="meta">📍 ${esc(a.city)} · ${esc(a.cat)}</div><div class="price">${money(a.price)}</div><p class="meta">${esc(a.desc||"")}</p><div class="row"><button class="small" onclick="viewAd('${a.id}')">Voir l’annonce</button><button class="small" onclick="contactAd('${a.id}')">💬 Contacter</button></div></div></article>`).join("")}</div>`:'<div class="empty">Vous n’avez pas encore de favori. Appuyez sur ♡ sur une annonce pour la sauvegarder.</div>'}</div><div class="section"><h3>Messages</h3>${renderMessages()}</div><div class="section"><h3>⭐ Avis sur PrixFaso</h3><p class="meta">Consulte les notes et commentaires laissés par les utilisateurs.</p><button class="full" onclick="openSiteReviewsAdmin()">📊 Voir les avis reçus</button></div></div>`;
+async function updateAdStatus(id,status){
+ if(!current)return;
+ try{
+  const {error}=await supabaseClient.from("annonces").update({status}).eq("id",id).eq("user_id",current.id);
+  if(error)throw error;
+  await loadCloudData();
+  renderDash();
+  toast(status==="sold"?"Annonce marquée comme vendue":"Annonce réactivée");
+ }catch(e){
+  console.error(e);
+  toast("Impossible de modifier le statut");
+ }
 }
-async function deleteAd(id){
+
+async function editAd(id){
+ if(!current)return;
+ const ad=ads.find(a=>a.id===id);
+ if(!ad)return;
+
+ const title=prompt("Titre de l'annonce :",ad.title||"");
+ if(title===null)return;
+
+ const price=prompt("Prix en FCFA :",ad.price||"");
+ if(price===null)return;
+
+ const desc=prompt("Description :",ad.desc||"");
+ if(desc===null)return;
+
+ try{
+  const {error}=await supabaseClient.from("annonces").update({
+   title:title.trim(),
+   price:Number(price),
+   description:desc.trim()
+  }).eq("id",id).eq("user_id",current.id);
+
+  if(error)throw error;
+
+  await loadCloudData();
+  renderDash();
+  toast("Annonce modifiée");
+ }catch(e){
+  console.error(e);
+  toast("Impossible de modifier l'annonce");
+ }
+  }
+  async function deleteAd(id){
  if(!current||String(id).startsWith("demo-"))return;
  try{const {error}=await supabaseClient.from("annonces").delete().eq("id",id).eq("user_id",current.id);if(error)throw error;await loadCloudData();renderDash();toast("Annonce supprimée")}catch(e){console.error(e);toast("Impossible de supprimer l'annonce")}
 }
