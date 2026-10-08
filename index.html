@@ -110,6 +110,7 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 <div class="field"><label>Prix (FCFA)</label><input id="adPrice" type="number" placeholder="15000"></div>
 <div class="field"><label>Ville</label><select id="adCity"><option>Ouagadougou</option><option>Bobo-Dioulasso</option><option>Koudougou</option><option>Banfora</option><option>Ouahigouya</option><option>Fada N'Gourma</option></select></div>
 <div class="field"><label>Description</label><textarea id="adDesc" rows="4" placeholder="Décrivez votre produit ou service"></textarea></div>
+<div class="field"><label>Photo du produit ou du service (facultatif)</label><input id="adImage" type="file" accept="image/jpeg,image/png,image/webp"><small class="meta">Formats JPG, PNG ou WebP · 2 Mo maximum.</small><div id="adImagePreview" style="margin-top:8px"></div></div>
 <div class="field"><label><input id="waEnabled" type="checkbox" onchange="toggleWhatsappFields()" style="width:auto"> J'accepte d'être contacté sur WhatsApp pour cette annonce</label></div>
 <div class="field" id="waPhoneBlock" style="display:none"><label>Numéro WhatsApp avec indicatif pays</label><input id="waPhone" type="tel" placeholder="+226 70 00 00 00"><small class="meta">Exemple : +226 suivi de votre numéro. Votre numéro ne sera affiché que si vous activez cette option.</small></div>
 <button class="full" onclick="publishAd()">Publier l'annonce</button>
@@ -194,6 +195,16 @@ function toggleMetier(){
  if(block)block.style.display=type==="service"?"block":"none";
 }
 
+function previewAdImage(){
+ const input=document.getElementById("adImage"),preview=document.getElementById("adImagePreview");
+ if(!input||!preview)return;
+ const file=input.files&&input.files[0];
+ if(!file){preview.innerHTML="";return}
+ if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>2*1024*1024){preview.innerHTML="";input.value="";toast("Choisissez une image JPG, PNG ou WebP de 2 Mo maximum");return}
+ const url=URL.createObjectURL(file);preview.innerHTML=`<img src="${url}" alt="Aperçu de la photo" style="max-width:100%;max-height:220px;border-radius:12px;object-fit:contain">`;
+}
+document.addEventListener("change",e=>{if(e.target&&e.target.id==="adImage")previewAdImage()});
+
 function normalizeAd(a){
  const service=a.type==="service";
  return {
@@ -212,7 +223,7 @@ function render(list=allAds()){
  if(!list.length){c.innerHTML='<div class="empty" style="grid-column:1/-1">Aucune annonce trouvée.</div>';return}
  c.innerHTML=list.map(a=>`
  <article class="card">
- <div class="thumb">${a.icon||"📦"}</div>
+ <div class="thumb">${a.image_url?`<img src="${esc(a.image_url)}" alt="Photo de ${esc(a.title)}" style="width:100%;height:100%;object-fit:cover">`:(a.icon||"📦")}</div>
  <div class="body">
  <div class="row"><strong>${esc(a.title)}</strong>${a.demo?"":`<button class="heart" onclick="toggleFav('${a.id}')">${fav.includes(a.id)?"❤️":"♡"}</button>`}</div>
  <div class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</div>
@@ -271,7 +282,7 @@ async function toggleFav(id){
 
 function viewAd(id){
  const a=allAds().find(x=>String(x.id)===String(id));if(!a)return;
- openCustom(`<h2>${esc(a.title)}</h2><p class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</p><h2 style="color:var(--p)">${money(a.price)}</h2><p>${esc(a.desc)}</p>${a.status==="sold"?'<p style="color:#dc2626;font-weight:800">🔴 Cette annonce est vendue.</p>':""}<button class="full" onclick="contactAd('${a.id}');closeModal()">💬 Contacter l'annonceur</button>`)
+ openCustom(`<h2>${esc(a.title)}</h2>${a.image_url?`<img src="${esc(a.image_url)}" alt="Photo de ${esc(a.title)}" style="width:100%;max-height:320px;object-fit:contain;border-radius:12px;margin:10px 0">`:""}<p class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</p><h2 style="color:var(--p)">${money(a.price)}</h2><p>${esc(a.desc)}</p>${a.status==="sold"?'<p style="color:#dc2626;font-weight:800">🔴 Cette annonce est vendue.</p>':""}<button class="full" onclick="contactAd('${a.id}');closeModal()">💬 Contacter l'annonceur</button>`)
 }
 
 async function register(){
@@ -344,12 +355,22 @@ async function publishAd(){
  if(!requireClient())return;
  const title=document.getElementById("adTitle").value.trim(),price=Number(document.getElementById("adPrice").value),description=document.getElementById("adDesc").value.trim(),category=document.getElementById("adCat").value,city=document.getElementById("adCity").value,type=document.getElementById("adType").value,metier=type==="service"?document.getElementById("adMetier").value:"";
  const whatsapp_enabled=document.getElementById("waEnabled").checked,whatsapp_phone=document.getElementById("waPhone").value.trim();
+ const imageFile=document.getElementById("adImage")?.files?.[0];
  if(!title||!price){toast("Ajoutez un titre et un prix");return}
  if(whatsapp_enabled&&!whatsapp_phone){toast("Ajoutez votre numéro WhatsApp ou désactivez l'option");return}
+ if(imageFile&&(!["image/jpeg","image/png","image/webp"].includes(imageFile.type)||imageFile.size>2*1024*1024)){toast("Photo : JPG, PNG ou WebP de 2 Mo maximum");return}
  try{
-  const {error}=await supabaseClient.from("annonces").insert({user_id:current.id,title,category,price,city,description,type,metier,status:"active",whatsapp_enabled,whatsapp_phone:whatsapp_enabled?whatsapp_phone:null});
+  let image_url=null;
+  if(imageFile){
+   const ext=imageFile.type==="image/png"?"png":imageFile.type==="image/webp"?"webp":"jpg";
+   const path=`${current.id}/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${ext}`;
+   const {error:uploadError}=await supabaseClient.storage.from("annonce-photos").upload(path,imageFile,{cacheControl:"3600",upsert:false,contentType:imageFile.type});
+   if(uploadError)throw uploadError;
+   image_url=supabaseClient.storage.from("annonce-photos").getPublicUrl(path).data.publicUrl;
+  }
+  const {error}=await supabaseClient.from("annonces").insert({user_id:current.id,title,category,price,city,description,type,metier,status:"active",image_url,whatsapp_enabled,whatsapp_phone:whatsapp_enabled?whatsapp_phone:null});
   if(error)throw error;
-  document.getElementById("adTitle").value="";document.getElementById("adPrice").value="";document.getElementById("adDesc").value="";
+  document.getElementById("adTitle").value="";document.getElementById("adPrice").value="";document.getElementById("adDesc").value="";document.getElementById("adImage").value="";document.getElementById("adImagePreview").innerHTML="";
   document.getElementById("waEnabled").checked=false;document.getElementById("waPhone").value="";toggleWhatsappFields();
   document.getElementById("adType").value="produit";toggleMetier();
   await loadCloudData();toast("Annonce publiée");go("annonces")
