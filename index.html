@@ -458,7 +458,7 @@ async function register(){
   if(error)throw error;
   if(!data.user){throw new Error("Compte non créé")}
   if(data.session){
-   current={id:data.user.id,name,phone,email};
+   current={id:data.user.id,name,phone,email,avatar_url:""};
    await ensureProfile(data.user,name,phone);
    await loadCloudData();
    closeModal();updateAccount();toast("Compte créé avec succès");
@@ -485,7 +485,7 @@ async function ensureProfile(user,name,phone){
 }
 async function setCurrentFromUser(user){
  if(!user){current=null;return}
- let {data:profile}=await supabaseClient.from("profiles").select("id,name,phone").eq("id",user.id).maybeSingle();
+ let {data:profile}=await supabaseClient.from("profiles").select("id,name,phone,avatar_url").eq("id",user.id).maybeSingle();
  if(!profile){await ensureProfile(user,user.user_metadata?.name||user.email?.split("@")[0]||"Utilisateur",user.user_metadata?.phone||"");profile={id:user.id,name:user.user_metadata?.name||user.email?.split("@")[0]||"Utilisateur",phone:user.user_metadata?.phone||""}}
  current={id:user.id,name:profile.name||"Utilisateur",phone:profile.phone||"",email:user.email||""};
 }
