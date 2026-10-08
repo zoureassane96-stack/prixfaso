@@ -490,7 +490,7 @@ async function setCurrentFromUser(user){
  current={id:user.id,name:profile.name||"Utilisateur",phone:profile.phone||"",email:user.email||""};
 }
 async function fetchPublicAds(){
- const select="id,user_id,title,category,price,city,description,image_url,created_at";
+ const select="id,user_id,title,category,price,city,description,image_url,created_at,status";
  try{
   const {data,error}=await supabaseClient.from("annonces").select(select).order("created_at",{ascending:false});
   if(error)throw error;
