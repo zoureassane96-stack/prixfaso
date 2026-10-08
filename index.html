@@ -110,6 +110,8 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 <div class="field"><label>Prix (FCFA)</label><input id="adPrice" type="number" placeholder="15000"></div>
 <div class="field"><label>Ville</label><select id="adCity"><option>Ouagadougou</option><option>Bobo-Dioulasso</option><option>Koudougou</option><option>Banfora</option><option>Ouahigouya</option><option>Fada N'Gourma</option></select></div>
 <div class="field"><label>Description</label><textarea id="adDesc" rows="4" placeholder="Décrivez votre produit ou service"></textarea></div>
+<div class="field"><label><input id="waEnabled" type="checkbox" onchange="toggleWhatsappFields()" style="width:auto"> J'accepte d'être contacté sur WhatsApp pour cette annonce</label></div>
+<div class="field" id="waPhoneBlock" style="display:none"><label>Numéro WhatsApp avec indicatif pays</label><input id="waPhone" type="tel" placeholder="+226 70 00 00 00"><small class="meta">Exemple : +226 suivi de votre numéro. Votre numéro ne sera affiché que si vous activez cette option.</small></div>
 <button class="full" onclick="publishAd()">Publier l'annonce</button>
 </div>
 </section>
@@ -199,7 +201,7 @@ function normalizeAd(a){
   type:a.type||"produit",metier:a.metier||"",price:Number(a.price||0),
   city:a.city||"",desc:a.description||"",icon:service?"🛠️":
   ({"Matériaux":"🏗️","Immobilier":"🏠","Véhicules":"🚗","Électronique":"📱","Services":"🛠️","Alimentation":"🌾"}[a.category]||"📦"),
-  owner:a.user_id,created_at:a.created_at,image_url:a.image_url||"",status:a.status||"active"
+  owner:a.user_id,created_at:a.created_at,image_url:a.image_url||"",status:a.status||"active",whatsapp_enabled:a.whatsapp_enabled===true,whatsapp_phone:a.whatsapp_phone||""
  }
 }
 
@@ -218,6 +220,7 @@ function render(list=allAds()){
  <div class="price">${money(a.price)}</div>
  <p class="meta">${esc(a.desc)}</p>
  <div class="row"><button class="small" onclick="viewAd('${a.id}')">Voir l'annonce</button><button class="small" onclick="contactAd('${a.id}')">💬 Contacter</button></div>
+ ${a.whatsapp_enabled&&a.whatsapp_phone&&!a.demo?`<button class="small full" style="background:#25D366;color:#fff;margin-top:8px" onclick="openWhatsApp('${a.id}')">🟢 Contacter sur WhatsApp</button>`:""}
  ${a.owner&&!a.demo?`<button class="small full" onclick="openSeller('${a.owner}')">👤 Voir le vendeur</button>`:""}
  </div></article>`).join("")
 }
@@ -320,7 +323,7 @@ async function setCurrentFromUser(user){
 
 async function fetchPublicAds(){
  if(!supabaseClient)return [];
- const select="id,user_id,title,category,price,city,description,image_url,created_at,status,type,metier";
+ const select="id,user_id,title,category,price,city,description,image_url,created_at,status,type,metier,whatsapp_enabled,whatsapp_phone";
  const {data,error}=await supabaseClient.from("annonces").select(select).order("created_at",{ascending:false});
  if(error)throw error;return data||[]
 }
@@ -340,11 +343,14 @@ async function publishAd(){
  if(!current){openModal("login");return}
  if(!requireClient())return;
  const title=document.getElementById("adTitle").value.trim(),price=Number(document.getElementById("adPrice").value),description=document.getElementById("adDesc").value.trim(),category=document.getElementById("adCat").value,city=document.getElementById("adCity").value,type=document.getElementById("adType").value,metier=type==="service"?document.getElementById("adMetier").value:"";
+ const whatsapp_enabled=document.getElementById("waEnabled").checked,whatsapp_phone=document.getElementById("waPhone").value.trim();
  if(!title||!price){toast("Ajoutez un titre et un prix");return}
+ if(whatsapp_enabled&&!whatsapp_phone){toast("Ajoutez votre numéro WhatsApp ou désactivez l'option");return}
  try{
-  const {error}=await supabaseClient.from("annonces").insert({user_id:current.id,title,category,price,city,description,type,metier,status:"active"});
+  const {error}=await supabaseClient.from("annonces").insert({user_id:current.id,title,category,price,city,description,type,metier,status:"active",whatsapp_enabled,whatsapp_phone:whatsapp_enabled?whatsapp_phone:null});
   if(error)throw error;
   document.getElementById("adTitle").value="";document.getElementById("adPrice").value="";document.getElementById("adDesc").value="";
+  document.getElementById("waEnabled").checked=false;document.getElementById("waPhone").value="";toggleWhatsappFields();
   document.getElementById("adType").value="produit";toggleMetier();
   await loadCloudData();toast("Annonce publiée");go("annonces")
  }catch(e){console.error(e);toast(e.message||"Impossible de publier l'annonce")}
@@ -363,6 +369,23 @@ function updateAccount(){
  document.getElementById("account").innerHTML=current
  ?`<button onclick="go('dashboard')">👤 ${esc((current.name||"Utilisateur").split(" ")[0])}${unreadBadge()}</button><button class="outline" onclick="logout()">Déconnexion</button>`
  :`<button class="outline" onclick="openModal('login')">Connexion</button><button class="primary" onclick="openModal('register')">Inscription</button>`
+}
+
+function toggleWhatsappFields(){
+ const enabled=document.getElementById("waEnabled")?.checked;
+ const block=document.getElementById("waPhoneBlock");
+ if(block)block.style.display=enabled?"block":"none";
+}
+function openWhatsApp(id){
+ const a=allAds().find(x=>String(x.id)===String(id));
+ if(!a||!a.whatsapp_enabled||!a.whatsapp_phone){toast("Le vendeur n'a pas activé WhatsApp pour cette annonce");return}
+ let phone=String(a.whatsapp_phone).replace(/\D/g,"");
+ if(phone.startsWith("00"))phone=phone.slice(2);
+ if(phone.length===8)phone="226"+phone;
+ else if(phone.length===9&&phone.startsWith("0"))phone="226"+phone.slice(1);
+ if(phone.length<10){toast("Le numéro WhatsApp semble incomplet. Ajoutez l'indicatif du pays.");return}
+ const message=`Bonjour, je vous contacte depuis PrixFaso au sujet de votre annonce « ${a.title} » à ${a.city}. Êtes-vous disponible ?`;
+ window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(message),"_blank","noopener");
 }
 
 function contactAd(id){
