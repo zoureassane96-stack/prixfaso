@@ -170,7 +170,7 @@ let messages=[];
 
 function money(n){return Number(n).toLocaleString("fr-FR")+" FCFA"}
 function toast(t){let x=document.getElementById("toast");x.textContent=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),2500)}
-function normalizeAd(a){return {id:a.id,title:a.title,cat:a.category,price:Number(a.price),city:a.city,desc:a.description||"",icon:( {"Matériaux":"🏗️","Immobilier":"🏠","Véhicules":"🚗","Électronique":"📱","Services":"🛠️","Alimentation":"🌾"}[a.category]||"📦"),owner:a.user_id,created_at:a.created_at,image_url:a.image_url,status:a.status}}
+function normalizeAd(a){const isService=a.type==="service";return {id:a.id,title:a.title,cat:isService?"Services":a.category,type:a.type||"produit",metier:a.metier||"",price:Number(a.price),city:a.city,desc:a.description||"",icon:isService?"🛠️":({"Matériaux":"🏗️","Immobilier":"🏠","Véhicules":"🚗","Électronique":"📱","Services":"🛠️","Alimentation":"🌾"}[a.category]||"📦"),owner:a.user_id,created_at:a.created_at,image_url:a.image_url,status:a.status}}
 function allAds(){return ads.length?ads:seed}
 function render(list=allAds()){
  const c=document.getElementById("cards");
