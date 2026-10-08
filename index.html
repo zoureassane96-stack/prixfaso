@@ -2,39 +2,42 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#0f766e">
-<title>PrixFaso — Burkina Faso</title>
+<meta name="application-name" content="PrixFaso">
+<title>PrixFaso — Prix, annonces et services au Burkina Faso</title>
 <style>
-:root{--p:#0f766e;--p2:#115e59;--a:#f59e0b;--bg:#f6f8f7;--card:#fff;--text:#17211f;--muted:#66736f;--border:#e2e8e5;--danger:#dc2626}
+:root{--p:#0f766e;--p2:#115e59;--a:#f59e0b;--bg:#f6f8f7;--card:#fff;--text:#17211f;--muted:#66736f;--border:#e2e8e5;--danger:#dc2626;--shadow:0 8px 30px #12332b12}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
 button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.top{background:#073b36;color:#fff;padding:7px 5%;font-size:13px;text-align:center}
-nav{height:68px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:15px;padding:0 5%;position:sticky;top:0;z-index:20}
-.logo{font-weight:900;font-size:25px;color:var(--p);margin-right:auto}.logo span{color:var(--a)}
-.navlinks{display:flex;gap:6px}.navlinks button,.account button{background:transparent;color:var(--text);padding:9px 11px;border-radius:9px}
-.navlinks button:hover,.account button:hover{background:#eef5f3}.primary{background:var(--p)!important;color:#fff!important}.outline{border:1px solid var(--p)!important;color:var(--p)!important;background:#fff!important}
-main{max-width:1180px;margin:auto;padding:25px 18px 70px}.hero{background:linear-gradient(120deg,#0b5d55,#15927f);color:#fff;border-radius:24px;padding:35px 25px}
-.hero h1{font-size:clamp(30px,6vw,52px);line-height:1.05;margin:0 0 12px}.hero p{max-width:700px;font-size:17px;color:#e6fffb}
-.search{background:#fff;border-radius:15px;padding:8px;display:flex;gap:8px;max-width:900px;margin-top:20px}.search input,.search select{border:0;outline:0;padding:12px;min-width:0}.search input{flex:1}.search button{padding:12px 18px;border-radius:10px;background:var(--a);font-weight:800}
-.filters{display:flex;gap:8px;flex-wrap:wrap;max-width:900px;margin-top:8px}.filters input,.filters select,.filters button{border:0;outline:0;background:#fff;padding:10px 12px;border-radius:10px}.filters input{width:145px}.filters select{min-width:170px}.filters button{background:#eef5f3;color:var(--p);font-weight:700}
-.section{margin-top:30px}.section h2{margin:0 0 15px}.chips{display:flex;gap:8px;overflow:auto;padding-bottom:5px}.chip{background:#fff;border:1px solid var(--border);padding:9px 14px;border-radius:999px;white-space:nowrap}.chip.active{background:#e2f4f0;border-color:#9ad5cb;color:var(--p);font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden}.thumb{height:145px;background:linear-gradient(135deg,#d9eee9,#f7dca7);display:flex;align-items:center;justify-content:center;font-size:52px}.body{padding:15px}
-.price{font-weight:900;font-size:20px;color:var(--p)}.meta{color:var(--muted);font-size:13px;margin:7px 0 11px}.row{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.small{padding:8px 11px;border-radius:8px;background:#eef5f3;color:var(--p);font-weight:700}.heart{background:transparent;font-size:21px}.full{width:100%;padding:12px;border-radius:10px;background:var(--p);color:#fff;font-weight:800;margin-top:8px}
-.features{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.feature{background:#fff;padding:18px;border:1px solid var(--border);border-radius:15px}.feature b{display:block;margin:7px 0}.feature span{color:var(--muted);font-size:14px}
+nav{height:68px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:18px;padding:0 5%;position:sticky;top:0;z-index:20}.logo{font-weight:900;font-size:25px;color:var(--p);margin-right:auto}.logo span{color:var(--a)}
+.navlinks{display:flex;gap:7px}.navlinks button,.account button{background:transparent;color:var(--text);padding:10px 12px;border-radius:9px}.navlinks button:hover,.account button:hover{background:#eef5f3}
+.primary{background:var(--p)!important;color:#fff!important}.outline{border:1px solid var(--p)!important;color:var(--p)!important;background:#fff!important}
+main{max-width:1180px;margin:auto;padding:28px 18px 70px}.hero{background:linear-gradient(120deg,#0b5d55,#15927f);color:#fff;border-radius:24px;padding:38px 30px;box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(30px,6vw,54px);line-height:1.05;margin:0 0 12px}.hero p{max-width:700px;font-size:17px;color:#e6fffb}
+.search{background:#fff;border-radius:15px;padding:8px;display:flex;gap:8px;max-width:900px;margin-top:22px}.search input,.search select{border:0;outline:0;padding:12px;min-width:0}.search input{flex:1}.search button{padding:12px 18px;border-radius:10px;background:var(--a);color:#201500;font-weight:700}
+.filters{display:flex;gap:8px;flex-wrap:wrap;max-width:900px;margin-top:8px}.filters input,.filters select,.filters button{border:0;outline:0;background:#fff;padding:11px 12px;border-radius:10px}.filters input{width:145px}.filters select{min-width:180px}.filters button{background:#eef5f3;color:var(--p);font-weight:700}
+.section{margin-top:32px}.section h2{margin:0 0 16px}.chips{display:flex;gap:9px;overflow:auto;padding-bottom:5px}.chip{background:#fff;border:1px solid var(--border);padding:9px 14px;border-radius:999px;white-space:nowrap}.chip.active{background:#e2f4f0;border-color:#9ad5cb;color:var(--p);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #12332b08}
+.thumb{height:150px;background:linear-gradient(135deg,#d9eee9,#f7dca7);display:flex;align-items:center;justify-content:center;font-size:52px}.body{padding:16px}.price{font-weight:900;font-size:20px;color:var(--p)}.meta{color:var(--muted);font-size:13px;margin:7px 0 12px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.small{padding:8px 11px;border-radius:8px;background:#eef5f3;color:var(--p);font-weight:700}.heart{font-size:20px;background:transparent}
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.feature{background:#fff;padding:20px;border:1px solid var(--border);border-radius:15px}.feature b{display:block;margin:8px 0}.feature span{color:var(--muted);font-size:14px}
 footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer b{color:#fff}
-.modal{position:fixed;inset:0;background:#001b1780;display:none;align-items:center;justify-content:center;padding:15px;z-index:50}.modal.open{display:flex}.box{background:#fff;border-radius:18px;width:min(560px,100%);max-height:90vh;overflow:auto;padding:23px}.close{float:right;background:#eef2f1;border-radius:50%;width:34px;height:34px}.field{margin:13px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);border-radius:9px;padding:11px;outline:none}
-.dash{display:none}.dash.show{display:block}.empty{text-align:center;padding:40px;color:var(--muted);background:#fff;border:1px dashed var(--border);border-radius:15px}.toast{position:fixed;right:16px;bottom:16px;background:#123d38;color:#fff;padding:13px 17px;border-radius:10px;display:none;z-index:100}.toast.show{display:block}
-.msg-list{display:grid;gap:10px}.msg-item{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px}.msg-item.unread{border-color:#8acfc3;box-shadow:0 0 0 2px #e2f4f0}.badge,.unread-nav{display:inline-block;background:var(--p);color:#fff;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:800}.conversation{display:grid;gap:9px;margin-top:12px}.bubble{max-width:86%;padding:11px 13px;border-radius:14px;background:#eef5f3}.bubble.mine{margin-left:auto;background:#dff4ef}.reply-row{display:flex;gap:8px;margin-top:14px;align-items:flex-end}.reply-row textarea{flex:1;min-height:70px}.reply-row button{padding:11px 14px;border-radius:10px;background:var(--p);color:#fff;font-weight:800}
-.rating-box{background:#f7fbfa;border:1px solid var(--border);border-radius:14px;padding:14px;margin:12px 0}.stars{color:#f59e0b;font-size:22px;letter-spacing:1px}.rating-score{font-size:28px;font-weight:900;color:var(--p)}.review-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px;margin-top:9px}
-.star-choice{display:flex;gap:5px;flex-direction:row-reverse;justify-content:flex-end}.star-choice button{background:transparent;font-size:30px;color:#cbd5d1;padding:2px}.star-choice button.selected,.star-choice button:hover,.star-choice button:hover~button{color:#f59e0b}
-@media(max-width:800px){.navlinks{display:none}.grid{grid-template-columns:1fr 1fr}.features{grid-template-columns:1fr 1fr}.search{flex-wrap:wrap}.search input{flex-basis:100%}}
-@media(max-width:520px){.grid,.features{grid-template-columns:1fr}.logo{font-size:21px}}
+.modal{position:fixed;inset:0;background:#001b1780;display:none;align-items:center;justify-content:center;padding:15px;z-index:50}.modal.open{display:flex}.box{background:#fff;border-radius:18px;width:min(560px,100%);max-height:90vh;overflow:auto;padding:24px}.box h2{margin-top:0}.close{float:right;background:#eef2f1;border-radius:50%;width:34px;height:34px}
+.field{margin:13px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);border-radius:9px;padding:11px;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--p)}
+.full{width:100%;padding:12px;border-radius:10px;background:var(--p);color:#fff;font-weight:800;margin-top:8px}.muted{text-align:center;color:var(--muted);font-size:13px}.dash{display:none}.dash.show{display:block}.empty{text-align:center;padding:45px;color:var(--muted);background:#fff;border:1px dashed var(--border);border-radius:15px}
+.toast{position:fixed;right:16px;bottom:16px;background:#123d38;color:#fff;padding:13px 17px;border-radius:10px;display:none;z-index:100}.toast.show{display:block}
+.msg-list{display:grid;gap:12px}.msg-item{background:#fff;border:1px solid var(--border);border-radius:14px;padding:15px}.msg-item.unread{border-color:#8acfc3;box-shadow:0 0 0 2px #e2f4f0}.msg-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.msg-preview{color:var(--muted);margin:8px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.badge{display:inline-block;background:var(--p);color:#fff;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:800}
+.conversation{display:grid;gap:10px;margin-top:12px}.bubble{max-width:86%;padding:11px 13px;border-radius:14px;background:#eef5f3}.bubble.mine{margin-left:auto;background:#dff4ef}.bubble .meta{margin:4px 0 0;font-size:11px}.reply-row{display:flex;gap:8px;align-items:flex-end;margin-top:14px}.reply-row textarea{flex:1;min-height:70px;resize:vertical}.reply-row button{padding:11px 14px;border-radius:10px;background:var(--p);color:#fff;font-weight:800}.unread-nav{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;margin-left:5px;border-radius:999px;background:#dc2626;color:#fff;font-size:11px;font-weight:900;vertical-align:middle}
+.stars{color:#f59e0b;font-size:21px;letter-spacing:1px}.rating-box{background:#f7fbfa;border:1px solid var(--border);border-radius:14px;padding:14px;margin:12px 0 16px}.rating-score{font-size:28px;font-weight:900;color:var(--p)}.review-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px;margin-top:9px}
+.star-choice{display:flex;gap:6px;flex-direction:row-reverse;justify-content:flex-end}.star-choice button{background:transparent;font-size:30px;color:#cbd5d1;padding:2px}.star-choice button.selected,.star-choice button:hover,.star-choice button:hover~button{color:#f59e0b}
+.avatar{width:86px;height:86px;border-radius:50%;object-fit:cover;border:3px solid #dff4ef}
+@media(max-width:800px){.navlinks{display:none}.grid{grid-template-columns:1fr 1fr}.features{grid-template-columns:1fr 1fr}.hero{padding:28px 20px}.search{flex-wrap:wrap}.search input{flex-basis:100%}.filters input,.filters select{flex:1;min-width:130px}}
+@media(max-width:520px){.grid,.features{grid-template-columns:1fr}.account button{padding:8px}.logo{font-size:21px}}
 </style>
 </head>
 <body>
-
-<div class="top">🇧🇫 PrixFaso — trouvez, comparez et publiez au Burkina Faso</div>
-
+<div class="top">🇧🇫 PrixFaso — trouvez, comparez et publiez des offres au Burkina Faso</div>
 <nav>
 <div class="logo">Prix<span>Faso</span></div>
 <div class="navlinks">
@@ -52,15 +55,15 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 <main id="home">
 <section class="hero">
 <h1>Les prix et services, au même endroit.</h1>
-<p>Comparez les prix, trouvez des produits et des professionnels au Burkina Faso.</p>
+<p>Comparez les prix, trouvez des locations, découvrez des services et publiez vos propres annonces partout au Burkina Faso.</p>
 <div class="search">
 <input id="q" placeholder="Que recherchez-vous ? ex. ciment, maison, maçon...">
 <select id="city"><option value="">Toute ville</option><option>Ouagadougou</option><option>Bobo-Dioulasso</option><option>Koudougou</option><option>Banfora</option><option>Ouahigouya</option><option>Fada N'Gourma</option></select>
 <button onclick="searchAds()">Rechercher</button>
 </div>
 <div class="filters">
-<input id="minPrice" type="number" placeholder="Prix min">
-<input id="maxPrice" type="number" placeholder="Prix max">
+<input id="minPrice" type="number" min="0" placeholder="Prix min (FCFA)">
+<input id="maxPrice" type="number" min="0" placeholder="Prix max (FCFA)">
 <select id="sortBy"><option value="recent">Plus récentes</option><option value="priceAsc">Prix : moins cher</option><option value="priceDesc">Prix : plus cher</option></select>
 <button onclick="resetFilters()">Réinitialiser</button>
 </div>
@@ -80,17 +83,17 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 </section>
 
 <section class="section" id="annonces">
-<div class="row"><h2>Annonces récentes</h2><button class="small" onclick="go('publier')">+ Publier</button></div>
+<div class="row"><h2>Annonces récentes</h2><button class="small" onclick="go('publier')">+ Publier une annonce</button></div>
 <div id="cards" class="grid"></div>
 </section>
 
 <section class="section">
 <h2>Pourquoi PrixFaso ?</h2>
 <div class="features">
-<div class="feature">🔎<b>Comparer</b><span>Comparez rapidement les prix proposés.</span></div>
-<div class="feature">📍<b>Localiser</b><span>Filtrez les annonces par ville.</span></div>
-<div class="feature">🛠️<b>Trouver un professionnel</b><span>Maçon, électricien, plombier et autres métiers.</span></div>
-<div class="feature">💬<b>Échanger</b><span>Contactez directement les annonceurs.</span></div>
+<div class="feature">🔎<b>Comparer</b><span>Comparez rapidement les prix proposés par plusieurs vendeurs.</span></div>
+<div class="feature">📍<b>Localiser</b><span>Filtrez les annonces par ville et trouvez les offres proches.</span></div>
+<div class="feature">📢<b>Publier</b><span>Ajoutez vos produits, locations ou services en quelques étapes.</span></div>
+<div class="feature">💬<b>Échanger</b><span>Contactez les annonceurs et gérez vos favoris depuis votre espace.</span></div>
 </div>
 </section>
 
@@ -101,26 +104,26 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 <section class="section dash" id="publier">
 <h2>Publier une annonce</h2>
 <div class="box" style="display:block;max-width:650px;margin:auto">
-<div class="field"><label>Titre</label><input id="adTitle" placeholder="Ex. Sac de ciment 50 kg"></div>
-<div class="field"><label>Type d'annonce</label><select id="adType" onchange="toggleMetier()"><option value="produit">🛒 Produit</option><option value="service">🛠️ Service</option></select></div>
-<div class="field" id="metierBlock" style="display:none"><label>Métier</label><select id="adMetier">
+<div class="field"><label>Titre</label><input id="adTitle" placeholder="Ex. Maçon professionnel ou Sac de ciment 50 kg"></div>
+<div class="field"><label>Type d'annonce</label>
+<select id="adType" onchange="toggleMetier()"><option value="produit">🛒 Produit</option><option value="service">🛠️ Service</option></select></div>
+<div class="field" id="metierBlock" style="display:none"><label>Métier</label>
+<select id="adMetier">
 <option value="Maçon">🧱 Maçon</option><option value="Constructeur de maison">🏗️ Constructeur de maison</option><option value="Électricien">⚡ Électricien</option><option value="Plombier">🚰 Plombier</option><option value="Peintre">🎨 Peintre</option><option value="Menuisier">🔨 Menuisier</option><option value="Carreleur">🧱 Carreleur</option><option value="Soudeur">🔧 Soudeur</option><option value="Terrassier">🚜 Terrassier</option><option value="Architecte">🏠 Architecte</option><option value="Autre">🔧 Autre</option>
 </select></div>
 <div class="field"><label>Catégorie</label><select id="adCat"><option>Matériaux</option><option>Immobilier</option><option>Véhicules</option><option>Électronique</option><option>Services</option><option>Alimentation</option></select></div>
-<div class="field"><label>Prix (FCFA)</label><input id="adPrice" type="number" placeholder="15000"></div>
+<div class="field"><label>Prix / tarif (FCFA)</label><input id="adPrice" type="number" min="1" placeholder="15000"></div>
 <div class="field"><label>Ville</label><select id="adCity"><option>Ouagadougou</option><option>Bobo-Dioulasso</option><option>Koudougou</option><option>Banfora</option><option>Ouahigouya</option><option>Fada N'Gourma</option></select></div>
 <div class="field"><label>Description</label><textarea id="adDesc" rows="4" placeholder="Décrivez votre produit ou service"></textarea></div>
-<button class="full" onclick="publishAd()">Publier l'annonce</button>
+<button class="full" onclick="publishAd()">Publier</button>
 </div>
 </section>
 </main>
 
-<footer>
-<b>PrixFaso</b><br>Plateforme de prix, annonces et services au Burkina Faso.
-<br><br><button class="small" onclick="openSiteReview()">⭐ Noter PrixFaso</button>
-<div id="siteRatingSummary" class="meta"></div>
-<br>© 2026 PrixFaso
-</footer>
+<footer><b>PrixFaso</b><br><span>Plateforme de prix, locations et annonces de services au Burkina Faso.</span><br><br>
+<button class="small" onclick="openSiteReview()">⭐ Noter PrixFaso</button>
+<div id="siteRatingSummary" class="meta" style="margin-top:10px"></div>
+<br>© 2026 PrixFaso — Tous droits réservés</footer>
 
 <div class="modal" id="modal"><div class="box"><button class="close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
 <div class="toast" id="toast"></div>
@@ -130,96 +133,50 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 const SUPABASE_URL="https://jovyqqqfcgluoclqrwvq.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_JHNtV5gYT00RrBj0jpfNAA_q9z4S2LM";
 let supabaseClient=null;
-if(window.supabase&&window.supabase.createClient){
-  try{supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY)}
-  catch(e){console.error("Supabase:",e)}
-}
-
-let current=null,ads=[],fav=[],messages=[],currentCat="Tous";
+let ads=[],fav=[],current=null,currentCat="Tous",messages=[],loading=true;
 
 const seed=[
-{id:"demo-1",title:"Ciment CPJ 35 — sac 50 kg",cat:"Matériaux",price:6500,city:"Ouagadougou",icon:"🏗️",desc:"Sac de ciment 50 kg, disponible en quantité.",demo:true},
-{id:"demo-2",title:"Appartement 2 chambres",cat:"Immobilier",price:150000,city:"Ouagadougou",icon:"🏠",desc:"Appartement propre avec eau et électricité.",demo:true},
-{id:"demo-3",title:"Moto en bon état",cat:"Véhicules",price:475000,city:"Bobo-Dioulasso",icon:"🏍️",desc:"Moto d'occasion, papiers disponibles.",demo:true},
-{id:"demo-4",title:"Smartphone Android",cat:"Électronique",price:85000,city:"Koudougou",icon:"📱",desc:"Téléphone Android avec accessoires.",demo:true},
-{id:"demo-5",title:"Maçon professionnel",cat:"Services",price:5000,city:"Ouagadougou",icon:"🛠️",desc:"Main-d'œuvre de maçonnerie, devis possible.",demo:true},
-{id:"demo-6",title:"Maïs — sac",cat:"Alimentation",price:18000,city:"Banfora",icon:"🌾",desc:"Maïs disponible en sacs.",demo:true}
+{id:"demo-1",title:"Ciment CPJ 35 — sac 50 kg",cat:"Matériaux",type:"produit",price:6500,city:"Ouagadougou",icon:"🏗️",desc:"Sac de ciment 50 kg, disponible en quantité.",demo:true},
+{id:"demo-2",title:"Appartement 2 chambres",cat:"Immobilier",type:"produit",price:150000,city:"Ouagadougou",icon:"🏠",desc:"Appartement propre avec eau et électricité.",demo:true},
+{id:"demo-3",title:"Moto en bon état",cat:"Véhicules",type:"produit",price:475000,city:"Bobo-Dioulasso",icon:"🏍️",desc:"Moto d'occasion, papiers disponibles.",demo:true},
+{id:"demo-4",title:"Smartphone Android",cat:"Électronique",type:"produit",price:85000,city:"Koudougou",icon:"📱",desc:"Téléphone Android avec accessoires.",demo:true},
+{id:"demo-5",title:"Maçon professionnel",cat:"Services",type:"service",metier:"Maçon",price:5000,city:"Ouagadougou",icon:"🛠️",desc:"Main-d'œuvre de maçonnerie, devis possible.",demo:true},
+{id:"demo-6",title:"Maïs — sac",cat:"Alimentation",type:"produit",price:18000,city:"Banfora",icon:"🌾",desc:"Maïs disponible en sacs.",demo:true}
 ];
 
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function sb(){
+ if(!supabaseClient){
+  if(!window.supabase) throw new Error("Le service de connexion n'est pas chargé.");
+  supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ }
+ return supabaseClient;
+}
 function money(n){return Number(n||0).toLocaleString("fr-FR")+" FCFA"}
-function toast(t){const x=document.getElementById("toast");x.textContent=t;x.classList.add("show");clearTimeout(window.__t);window.__t=setTimeout(()=>x.classList.remove("show"),2600)}
-function requireClient(){if(!supabaseClient){toast("Connexion au service indisponible. Réessayez.");return false}return true}
-
-function openCustom(html){document.getElementById("modalBody").innerHTML=html;document.getElementById("modal").classList.add("open")}
-function closeModal(){document.getElementById("modal").classList.remove("open")}
-function openModal(type){
- const html=type==="login"
- ?`<h2>Connexion</h2>
- <div class="field"><label>Email</label><input id="loginId" type="email" placeholder="exemple@email.com"></div>
- <div class="field"><label>Mot de passe</label><input id="loginPass" type="password"></div>
- <button class="full" onclick="login()">Se connecter</button>
- <p style="text-align:center">Pas encore de compte ? <a href="#" onclick="openModal('register');return false">Créer un compte</a></p>`
- :`<h2>Créer un compte</h2>
- <div class="field"><label>Nom complet</label><input id="regName" placeholder="Votre nom"></div>
- <div class="field"><label>Téléphone</label><input id="regPhone" placeholder="70 00 00 00"></div>
- <div class="field"><label>Email</label><input id="regEmail" type="email" placeholder="exemple@email.com"></div>
- <div class="field"><label>Mot de passe</label><input id="regPass" type="password" placeholder="Au moins 6 caractères"></div>
- <button class="full" onclick="register()">Créer mon compte</button>
- <p style="text-align:center">Déjà inscrit ? <a href="#" onclick="openModal('login');return false">Se connecter</a></p>`;
- openCustom(html)
-}
-
-function go(id){
- document.querySelectorAll(".dash").forEach(x=>x.classList.remove("show"));
- if(id==="dashboard"){
-   if(!current){openModal("login");return}
-   document.getElementById("dashboard").classList.add("show");renderDash();
-   document.getElementById("dashboard").scrollIntoView({behavior:"smooth"});return;
- }
- if(id==="publier"){
-   if(!current){openModal("login");return}
-   document.getElementById("publier").classList.add("show");
-   document.getElementById("publier").scrollIntoView({behavior:"smooth"});return;
- }
- if(id==="annonces"){document.getElementById("annonces").scrollIntoView({behavior:"smooth"});return}
- document.getElementById("home").scrollIntoView({behavior:"smooth"})
-}
-
-function toggleMetier(){
- const type=document.getElementById("adType")?.value;
- const block=document.getElementById("metierBlock");
- if(block)block.style.display=type==="service"?"block":"none";
-}
-
-function normalizeAd(a){
- const service=a.type==="service";
- return {
-  id:a.id,title:a.title,cat:service?"Services":a.category,
-  type:a.type||"produit",metier:a.metier||"",price:Number(a.price||0),
-  city:a.city||"",desc:a.description||"",icon:service?"🛠️":
-  ({"Matériaux":"🏗️","Immobilier":"🏠","Véhicules":"🚗","Électronique":"📱","Services":"🛠️","Alimentation":"🌾"}[a.category]||"📦"),
-  owner:a.user_id,created_at:a.created_at,image_url:a.image_url||"",status:a.status||"active"
- }
-}
-
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function toast(t){const x=document.getElementById("toast");x.textContent=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),2600)}
 function allAds(){return ads.length?ads:seed}
+function normalizeAd(a){
+ const isService=a.type==="service";
+ return {id:a.id,title:a.title,cat:isService?"Services":a.category,type:a.type||"produit",metier:a.metier||"",price:Number(a.price),city:a.city,desc:a.description||"",icon:isService?"🛠️":({"Matériaux":"🏗️","Immobilier":"🏠","Véhicules":"🚗","Électronique":"📱","Services":"🛠️","Alimentation":"🌾"}[a.category]||"📦"),owner:a.user_id,created_at:a.created_at,image_url:a.image_url,status:a.status};
+}
 
 function render(list=allAds()){
  const c=document.getElementById("cards");
+ if(!c)return;
  if(!list.length){c.innerHTML='<div class="empty" style="grid-column:1/-1">Aucune annonce trouvée.</div>';return}
  c.innerHTML=list.map(a=>`
  <article class="card">
- <div class="thumb">${a.icon||"📦"}</div>
- <div class="body">
- <div class="row"><strong>${esc(a.title)}</strong>${a.demo?"":`<button class="heart" onclick="toggleFav('${a.id}')">${fav.includes(a.id)?"❤️":"♡"}</button>`}</div>
- <div class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</div>
- ${a.status==="sold"?'<div class="meta" style="color:#dc2626;font-weight:800">🔴 Vendu</div>':""}
- <div class="price">${money(a.price)}</div>
- <p class="meta">${esc(a.desc)}</p>
- <div class="row"><button class="small" onclick="viewAd('${a.id}')">Voir l'annonce</button><button class="small" onclick="contactAd('${a.id}')">💬 Contacter</button></div>
- ${a.owner&&!a.demo?`<button class="small full" onclick="openSeller('${a.owner}')">👤 Voir le vendeur</button>`:""}
- </div></article>`).join("")
+  <div class="thumb">${a.icon||"📦"}</div>
+  <div class="body">
+   <div class="row"><strong>${esc(a.title)}</strong>${a.demo?"":`<button class="heart" onclick="toggleFav('${a.id}')">${fav.includes(a.id)?"❤️":"♡"}</button>`}</div>
+   <div class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</div>
+   <div class="price">${money(a.price)}</div>
+   <p class="meta">${esc(a.desc)}</p>
+   ${a.status==="sold"?'<p class="meta" style="color:#dc2626;font-weight:800">🔴 Vendu</p>':""}
+   <div class="row"><button class="small" onclick="viewAd('${a.id}')">Voir l'annonce</button><button class="small" onclick="contactAd('${a.id}')">💬 Contacter</button></div>
+   ${a.owner&&!a.demo?`<button class="small full" style="margin-top:8px" onclick="openSeller('${a.owner}')">👤 Voir le vendeur</button>`:""}
+  </div>
+ </article>`).join("");
 }
 
 function updateCategoryCounts(){
@@ -227,44 +184,50 @@ function updateCategoryCounts(){
  allAds().forEach(a=>counts[a.cat]=(counts[a.cat]||0)+1);
  document.querySelectorAll(".chip[data-cat]").forEach(el=>{
   const cat=el.dataset.cat,base=el.dataset.label||el.textContent.replace(/\s*\(\d+\)\s*$/,"").trim();
-  el.dataset.label=base;el.textContent=base+" ("+(counts[cat]||0)+")"
- })
+  el.dataset.label=base;el.textContent=base+" ("+(counts[cat]||0)+")";
+ });
 }
-
 function filterCat(cat,el){currentCat=cat;document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));el.classList.add("active");apply()}
 function apply(){
  updateCategoryCounts();
- const q=(document.getElementById("q").value||"").toLowerCase().trim(),city=document.getElementById("city").value;
- const minRaw=document.getElementById("minPrice").value,maxRaw=document.getElementById("maxPrice").value;
- const min=minRaw===""?null:Number(minRaw),max=maxRaw===""?null:Number(maxRaw),sort=document.getElementById("sortBy").value;
- let list=allAds().filter(a=>
-  (currentCat==="Tous"||a.cat===currentCat)&&(!city||a.city===city)&&
-  (!q||(`${a.title} ${a.cat} ${a.metier} ${a.city} ${a.desc}`).toLowerCase().includes(q))&&
-  (min===null||a.price>=min)&&(max===null||a.price<=max)
- );
- if(sort==="priceAsc")list.sort((a,b)=>a.price-b.price);
- else if(sort==="priceDesc")list.sort((a,b)=>b.price-a.price);
- else list.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
- render(list)
+ const q=(document.getElementById("q")?.value||"").toLowerCase().trim();
+ const city=document.getElementById("city")?.value||"";
+ const minRaw=document.getElementById("minPrice")?.value||"",maxRaw=document.getElementById("maxPrice")?.value||"";
+ const min=minRaw===""?null:Number(minRaw),max=maxRaw===""?null:Number(maxRaw),sort=document.getElementById("sortBy")?.value||"recent";
+ let list=allAds().filter(a=>(currentCat==="Tous"||a.cat===currentCat)&&(!city||a.city===city)&&(!q||(`${a.title} ${a.cat} ${a.metier||""} ${a.city} ${a.desc}`).toLowerCase().includes(q))&&(min===null||a.price>=min)&&(max===null||a.price<=max));
+ if(sort==="priceAsc")list.sort((a,b)=>a.price-b.price);else if(sort==="priceDesc")list.sort((a,b)=>b.price-a.price);else list.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+ render(list);
 }
-function searchAds(){apply();document.getElementById("annonces").scrollIntoView({behavior:"smooth"})}
-function resetFilters(){document.getElementById("q").value="";document.getElementById("city").value="";document.getElementById("minPrice").value="";document.getElementById("maxPrice").value="";document.getElementById("sortBy").value="recent";currentCat="Tous";document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));document.querySelector(".chip[data-cat='Tous']")?.classList.add("active");apply()}
+function searchAds(){apply();document.getElementById("annonces")?.scrollIntoView({behavior:"smooth"})}
+function resetFilters(){document.getElementById("q").value="";document.getElementById("city").value="";document.getElementById("minPrice").value="";document.getElementById("maxPrice").value="";document.getElementById("sortBy").value="recent";currentCat="Tous";document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));document.querySelector(".chip")?.classList.add("active");apply()}
 
 async function toggleFav(id){
  if(!current){openModal("login");return}
  if(String(id).startsWith("demo-"))return;
- if(!requireClient())return;
  try{
+  const client=sb();
   if(fav.includes(id)){
-   const {error}=await supabaseClient.from("favoris").delete().eq("user_id",current.id).eq("annonce_id",id);if(error)throw error;
-   fav=fav.filter(x=>x!==id);toast("Retiré des favoris")
+   const {error}=await client.from("favoris").delete().eq("user_id",current.id).eq("annonce_id",id);if(error)throw error;
+   fav=fav.filter(x=>x!==id);toast("Retiré des favoris");
   }else{
-   const {error}=await supabaseClient.from("favoris").insert({user_id:current.id,annonce_id:id});if(error)throw error;
-   fav.push(id);toast("Ajouté aux favoris")
+   const {error}=await client.from("favoris").insert({user_id:current.id,annonce_id:id});if(error)throw error;
+   fav=[...fav,id];toast("Ajouté aux favoris");
   }
-  apply()
- }catch(e){console.error(e);toast("Impossible de modifier les favoris")}
+  render();
+ }catch(e){console.error(e);toast(e.message||"Impossible de modifier les favoris")}
 }
 
 function viewAd(id){
- const a=allAds().find(x=>String
+ const a=allAds().find(x=>String(x.id)===String(id));if(!a)return;
+ openCustom(`<h2>${esc(a.title)}</h2><p class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</p><h2 style="color:var(--p)">${money(a.price)}</h2><p>${esc(a.desc)}</p>${a.status==="sold"?'<p style="color:#dc2626;font-weight:800">🔴 Cette annonce est vendue.</p>':""}<button class="full" onclick="contactAd('${a.id}');closeModal()">💬 Contacter l'annonceur</button>`);
+}
+
+async function loadSiteRating(){
+ try{
+  const {data,error}=await sb().from("avis_site").select("note");
+  if(error)throw error;
+  const rows=data||[],avg=rows.length?rows.reduce((s,r)=>s+Number(r.note||0),0)/rows.length:0;
+  const el=document.getElementById("siteRatingSummary");
+  if(el)el.textContent=rows.length?`⭐ ${avg.toFixed(1)}/5 — ${rows.length} avis sur PrixFaso`:"Aucun avis pour le moment — soyez le premier !";
+ }catch(e){console.warn("Avis site",e)}
+}
