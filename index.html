@@ -175,8 +175,8 @@ function allAds(){return ads.length?ads:seed}
 function render(list=allAds()){
  const c=document.getElementById("cards");
  if(!list.length){c.innerHTML='<div class="empty" style="grid-column:1/-1">Aucune annonce trouvée.</div>';return}
- c.innerHTML=list.map(a=>`<article class="card"><div class="thumb">${a.icon||"📦"}</div><div class="body"><div class="row"><strong>${esc(a.title)}</strong>${a.demo?'':'<button class="heart" onclick="toggleFav(\''+a.id+'\')">'+(fav.includes(a.id)?"❤️":"♡")+'</button>'}</div><div class="meta">📍 ${esc(a.city)} · ${esc(a.cat)}</div><div class="price">${money(a.price)}</div><p class="meta">${esc(a.desc||"")}</p><div class="row"><button class="small" onclick="viewAd('${a.id}')">Voir l'annonce</button><button class="small" onclick="contactAd('${a.id}')">💬 Contacter</button></div>${a.owner&&!a.demo?`<button class="small full" style="margin-top:8px" onclick="openSeller('${a.owner}')">👤 Voir le vendeur</button>`:''}</div></article>`).join("");
-}
+ c.innerHTML=list.map(a=>`<article class="card"><div class="thumb">${a.icon||"📦"}</div><div class="body"><div class="row"><strong>${esc(a.title)}</strong>${a.demo?'':'<button class="heart" onclick="toggleFav(\''+a.id+'\')">'+(fav.includes(a.id)?"❤️":"♡")+'</button>'}</div><div class="meta">📍 ${esc(a.city)} · ${esc(a.cat)</div><div class="price">${money(a.price)}</div><p class="meta">${esc(a.desc||"")}</p><div class="row"><button class="small" onclick="viewAd('${a.id}')">Voir l'annonce</button><button class="small" onclick="contactAd('${a.id}')">💬 Contacter</button></div>${a.owner&&!a.demo?`<button class="small full" style="margin-top:8px" onclick="openSeller('${a.owner}')">👤 Voir le vendeur</button>`:''}</div></article>`).join("");
+}}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function updateCategoryCounts(){
  const counts={Tous:allAds().length};
@@ -218,7 +218,7 @@ async function toggleFav(id){
   render();
  }catch(e){console.error(e);toast("Impossible de modifier les favoris")}
 }
-function viewAd(id){let a=allAds().find(x=>String(x.id)===String(id));if(!a)return;openCustom(`<h2>${esc(a.title)}</h2><p class="meta">📍 ${esc(a.city)} · ${esc(a.cat)}</p><h2 style="color:var(--p)">${money(a.price)}</h2><p>${esc(a.desc)}</p><button class="full" onclick="contactAd('${a.id}');closeModal()">💬 Contacter l'annonceur</button>`)}
+function viewAd(id){let a=allAds().find(x=>String(x.id)===String(id));if(!a)return;openCustom(`<h2>${esc(a.title)}</h2><p class="meta">📍${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)} </p><h2 style="color:var(--p)">${money(a.price)}</h2><p>${esc(a.desc)}</p><button class="full" onclick="contactAd('${a.id}');closeModal()">💬 Contacter l'annonceur</button>`)}
 
 async function loadSiteRating(){
  try{
@@ -518,7 +518,7 @@ async function setCurrentFromUser(user){
  current={id:user.id,name:profile.name||"Utilisateur",phone:profile.phone||"",email:user.email||""};
 }
 async function fetchPublicAds(){
- const select="id,user_id,title,category,price,city,description,image_url,created_at,status";
+ const select="id,user_id,title,category,price,city,description,image_url,created_at,status,type,metier";
  try{
   const {data,error}=await supabaseClient.from("annonces").select(select).order("created_at",{ascending:false});
   if(error)throw error;
