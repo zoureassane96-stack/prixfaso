@@ -26,9 +26,9 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 .dash{display:none}.dash.show{display:block}.empty{text-align:center;padding:40px;color:var(--muted);background:#fff;border:1px dashed var(--border);border-radius:15px}.toast{position:fixed;right:16px;bottom:16px;background:#123d38;color:#fff;padding:13px 17px;border-radius:10px;display:none;z-index:100}.toast.show{display:block}
 .msg-list{display:grid;gap:10px}.msg-item{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px}.msg-item.unread{border-color:#8acfc3;box-shadow:0 0 0 2px #e2f4f0}.badge,.unread-nav{display:inline-block;background:var(--p);color:#fff;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:800}.conversation{display:grid;gap:9px;margin-top:12px}.bubble{max-width:86%;padding:11px 13px;border-radius:14px;background:#eef5f3}.bubble.mine{margin-left:auto;background:#dff4ef}.reply-row{display:flex;gap:8px;margin-top:14px;align-items:flex-end}.reply-row textarea{flex:1;min-height:70px}.reply-row button{padding:11px 14px;border-radius:10px;background:var(--p);color:#fff;font-weight:800}
 .rating-box{background:#f7fbfa;border:1px solid var(--border);border-radius:14px;padding:14px;margin:12px 0}.stars{color:#f59e0b;font-size:22px;letter-spacing:1px}.rating-score{font-size:28px;font-weight:900;color:var(--p)}.review-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px;margin-top:9px}
-.star-choice{display:flex;gap:5px;flex-direction:row-reverse;justify-content:flex-end}.star-choice button{background:transparent;font-size:30px;color:#cbd5d1;padding:2px}.star-choice button.selected,.star-choice button:hover,.star-choice button:hover~button{color:#f59e0b}
+.star-choice{display:flex;gap:5px;flex-direction:row-reverse;justify-content:flex-end}.star-choice button{background:transparent;font-size:30px;color:#cbd5d1;padding:2px}.star-choice button.selected,.star-choice button:hover,.star-choice button:hover~button{color:#f59e0b}.photo-preview{display:flex;gap:8px;flex-wrap:wrap}.photo-preview img{width:92px;height:82px;object-fit:cover;border-radius:9px;border:1px solid var(--border)}.featured-card{border:2px solid #f4b740}.featured-tag{display:inline-block;background:#fff2cc;color:#805b00;padding:3px 7px;border-radius:7px;font-size:11px;font-weight:800;margin-bottom:6px}.photo-strip{display:flex;gap:6px;overflow:auto;margin:8px 0}.photo-strip img{height:74px;width:78px;object-fit:cover;border-radius:8px;flex:0 0 auto}
 @media(max-width:800px){.navlinks{display:none}.grid{grid-template-columns:1fr 1fr}.features{grid-template-columns:1fr 1fr}.search{flex-wrap:wrap}.search input{flex-basis:100%}}
-@media(max-width:520px){.grid,.features{grid-template-columns:1fr}.logo{font-size:21px}}
+@media(max-width:520px){main{padding:14px 10px 45px}.hero{padding:24px 15px;border-radius:17px}.hero p{font-size:15px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.features{grid-template-columns:1fr}.logo{font-size:21px}nav{height:auto;min-height:60px;padding:10px 12px;gap:6px}.account button{padding:8px 9px;font-size:12px}.thumb{height:125px}.body{padding:10px}.card .row{align-items:flex-start}.card .row strong{font-size:14px;overflow-wrap:anywhere}.price{font-size:17px}.card .meta{font-size:12px}.small{padding:8px 9px;font-size:12px}.box{padding:16px}.search{gap:6px}.search select,.search input{width:100%;flex-basis:100%}.search button{width:100%}.filters input,.filters select{width:100%;min-width:0}.filters{display:grid;grid-template-columns:1fr 1fr}.filters button{grid-column:1/-1}.reply-row{flex-wrap:wrap}.reply-row textarea{min-width:100%}}
 </style>
 </head>
 <body>
@@ -55,7 +55,7 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 <p>Comparez les prix, trouvez des produits et des professionnels au Burkina Faso.</p>
 <div class="search">
 <input id="q" placeholder="Que recherchez-vous ? ex. ciment, maison, maçon...">
-<select id="city"><option value="">Toute ville</option><option>Ouagadougou</option><option>Bobo-Dioulasso</option><option>Koudougou</option><option>Banfora</option><option>Ouahigouya</option><option>Fada N'Gourma</option></select>
+<input id="city" list="burkinaLocalities" placeholder="Ville / localité (ex. Garango)" autocomplete="off"><datalist id="burkinaLocalities"></datalist>
 <button onclick="searchAds()">Rechercher</button>
 </div>
 <div class="filters">
@@ -108,9 +108,10 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 </select></div>
 <div class="field"><label>Catégorie</label><select id="adCat"><option>Matériaux</option><option>Immobilier</option><option>Véhicules</option><option>Électronique</option><option>Services</option><option>Alimentation</option></select></div>
 <div class="field"><label>Prix (FCFA)</label><input id="adPrice" type="number" placeholder="15000"></div>
-<div class="field"><label>Ville</label><select id="adCity"><option>Ouagadougou</option><option>Bobo-Dioulasso</option><option>Koudougou</option><option>Banfora</option><option>Ouahigouya</option><option>Fada N'Gourma</option></select></div>
+<div class="field"><label>Ville / localité</label><input id="adCity" list="burkinaLocalities" placeholder="Ex. Garango, Tenkodogo, Dori…" required autocomplete="address-level2"><small class="meta">Vous pouvez saisir toute localité, même si elle n’apparaît pas dans la liste.</small></div>
 <div class="field"><label>Description</label><textarea id="adDesc" rows="4" placeholder="Décrivez votre produit ou service"></textarea></div>
-<div class="field"><label>Photo du produit ou du service (facultatif)</label><input id="adImage" type="file" accept="image/jpeg,image/png,image/webp"><small class="meta">Formats JPG, PNG ou WebP · 2 Mo maximum.</small><div id="adImagePreview" style="margin-top:8px"></div></div>
+<div class="field"><label>Photos du produit ou du service (facultatif, jusqu’à 5)</label><input id="adImage" type="file" accept="image/jpeg,image/png,image/webp" multiple><small class="meta">JPG, PNG ou WebP · 2 Mo maximum par photo · 5 photos maximum.</small><div id="adImagePreview" class="photo-preview" style="margin-top:8px"></div></div>
+<div class="field"><label><input id="adFeatured" type="checkbox" style="width:auto"> ⭐ Mettre cette annonce en avant gratuitement (offre de lancement)</label></div>
 <div class="field"><label><input id="waEnabled" type="checkbox" onchange="toggleWhatsappFields()" style="width:auto"> J'accepte d'être contacté sur WhatsApp pour cette annonce</label></div>
 <div class="field" id="waPhoneBlock" style="display:none"><label>Numéro WhatsApp avec indicatif pays</label><input id="waPhone" type="tel" placeholder="+226 70 00 00 00"><small class="meta">Exemple : +226 suivi de votre numéro. Votre numéro ne sera affiché que si vous activez cette option.</small></div>
 <button class="full" onclick="publishAd()">Publier l'annonce</button>
@@ -138,7 +139,7 @@ if(window.supabase&&window.supabase.createClient){
   catch(e){console.error("Supabase:",e)}
 }
 
-let current=null,ads=[],fav=[],messages=[],currentCat="Tous";
+let current=null,ads=[],fav=[],messages=[],currentCat="Tous",knownUnreadIds=new Set(),messagePoller=null;
 
 const seed=[
 {id:"demo-1",title:"Ciment CPJ 35 — sac 50 kg",cat:"Matériaux",price:6500,city:"Ouagadougou",icon:"🏗️",desc:"Sac de ciment 50 kg, disponible en quantité.",demo:true},
@@ -196,14 +197,17 @@ function toggleMetier(){
 }
 
 function previewAdImage(){
- const input=document.getElementById("adImage"),preview=document.getElementById("adImagePreview");
- if(!input||!preview)return;
- const file=input.files&&input.files[0];
- if(!file){preview.innerHTML="";return}
- if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>2*1024*1024){preview.innerHTML="";input.value="";toast("Choisissez une image JPG, PNG ou WebP de 2 Mo maximum");return}
- const url=URL.createObjectURL(file);preview.innerHTML=`<img src="${url}" alt="Aperçu de la photo" style="max-width:100%;max-height:220px;border-radius:12px;object-fit:contain">`;
+ const input=document.getElementById("adImage"),preview=document.getElementById("adImagePreview");if(!input||!preview)return;
+ const files=[...(input.files||[])];preview.innerHTML="";
+ if(files.length>5){input.value="";toast("Choisissez 5 photos maximum");return}
+ for(const file of files){if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>2*1024*1024){input.value="";preview.innerHTML="";toast("Chaque photo doit être JPG, PNG ou WebP de 2 Mo maximum");return}}
+ preview.innerHTML=files.map(file=>`<img src="${URL.createObjectURL(file)}" alt="Aperçu photo">`).join("");
 }
 document.addEventListener("change",e=>{if(e.target&&e.target.id==="adImage")previewAdImage()});
+
+const burkinaLocalities=["Ouagadougou","Bobo-Dioulasso","Koudougou","Banfora","Ouahigouya","Fada N’Gourma","Fada N'Gourma","Tenkodogo","Kaya","Dori","Gaoua","Manga","Ziniaré","Réo","Koupéla","Pouytenga","Garango","Pô","Léo","Sapouy","Houndé","Orodara","Sindou","Diébougou","Dano","Batié","Bougouriba","Boromo","Solenzo","Nouna","Tougan","Djibo","Gorom-Gorom","Kongoussi","Yako","Gourcy","Séguénéga","Boussé","Zorgho","Boulsa","Korsimoro","Kombissiri","Pabré","Saaba","Tanghin-Dassouri","Komsilga","Koubri","Loumbila","Béguédo","Bittou","Zabré","Zorgho","Bagré","Toma","Yaba","Titao","Thiou","Aribinda","Sebba","Gayéri","Bogandé","Manni","Pama","Diapaga","Kantchari","Tansarga","Komtoèga","Zoundwéogo","Kokologho","Sabou","Dédougou","Tchériba","Safané","Kona","Kouka","Bama","Karangasso-Vigué","Péni","Toussiamasso","Koumbia","Faramana","Koloko","Niangoloko","Sidéradougou","Douna","Karangasso Sambla","Dissin","Tiankoura","Kampti","Loropéni","Gbomblora","Nébiélianayou","Dapélogo","Bingo","Rollo","Mané","Pissila","Barsalogho","Bourzanga","Tikaré","Imasgo","Pella","Nanoro","Toécé","Doulougou","Béré","Boura","Gomboussougou","Nobéré","Guiba","Béré","Kindi","Godyr","Didyr","Ténado","Gossina","Yé","Bondokuy","Ouarkoye","Douroula","Bana","Béréba","Koti","Koundougou","Fô","Satiri","Léna","Fo","Dandé","Békuy","Koti","Pouni","Nandiala","Ramongo","Kordié","Bingo","Boudry","Mogtédo","Méguet","Salogo","Zam","Yargo","Andemtenga","Dialgaye","Tensobentenga","Yondé","Kando","Kouritenga","Bissiga","Lalgaye","Sangha","Saponé","Béré","Bama","Garango"];
+const uniqueLocalities=[...new Set(burkinaLocalities)].sort((a,b)=>a.localeCompare(b,"fr"));
+function populateLocalities(){const d=document.getElementById("burkinaLocalities");if(d)d.innerHTML=uniqueLocalities.map(v=>`<option value="${esc(v)}"></option>`).join("")}
 
 function normalizeAd(a){
  const service=a.type==="service";
@@ -212,19 +216,22 @@ function normalizeAd(a){
   type:a.type||"produit",metier:a.metier||"",price:Number(a.price||0),
   city:a.city||"",desc:a.description||"",icon:service?"🛠️":
   ({"Matériaux":"🏗️","Immobilier":"🏠","Véhicules":"🚗","Électronique":"📱","Services":"🛠️","Alimentation":"🌾"}[a.category]||"📦"),
-  owner:a.user_id,created_at:a.created_at,image_url:a.image_url||"",status:a.status||"active",whatsapp_enabled:a.whatsapp_enabled===true,whatsapp_phone:a.whatsapp_phone||""
+  owner:a.user_id,created_at:a.created_at,image_url:a.image_url||"",image_urls:Array.isArray(a.image_urls)?a.image_urls:(a.image_url?[a.image_url]:[]),is_featured:a.is_featured===true,status:a.status||"active",whatsapp_enabled:a.whatsapp_enabled===true,whatsapp_phone:a.whatsapp_phone||""
  }
 }
 
 function allAds(){return ads.length?ads:seed}
 
 function render(list=allAds()){
+ list=[...list].sort((a,b)=>Number(!!b.is_featured)-Number(!!a.is_featured));
  const c=document.getElementById("cards");
  if(!list.length){c.innerHTML='<div class="empty" style="grid-column:1/-1">Aucune annonce trouvée.</div>';return}
  c.innerHTML=list.map(a=>`
- <article class="card">
- <div class="thumb">${a.image_url?`<img src="${esc(a.image_url)}" alt="Photo de ${esc(a.title)}" style="width:100%;height:100%;object-fit:cover">`:(a.icon||"📦")}</div>
+ <article class="card ${a.is_featured?"featured-card":""}">
+ <div class="thumb">${(a.image_urls?.[0]||a.image_url)?`<img src="${esc(a.image_urls?.[0]||a.image_url)}" alt="Photo de ${esc(a.title)}" style="width:100%;height:100%;object-fit:cover">`:(a.icon||"📦")}</div>
  <div class="body">
+ ${a.is_featured?'<div class="featured-tag">⭐ À LA UNE · GRATUIT</div>':""}
+ ${a.image_urls?.length>1?`<div class="meta">📷 ${a.image_urls.length} photos</div>`:""}
  <div class="row"><strong>${esc(a.title)}</strong>${a.demo?"":`<button class="heart" onclick="toggleFav('${a.id}')">${fav.includes(a.id)?"❤️":"♡"}</button>`}</div>
  <div class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</div>
  ${a.status==="sold"?'<div class="meta" style="color:#dc2626;font-weight:800">🔴 Vendu</div>':""}
@@ -280,9 +287,10 @@ async function toggleFav(id){
  }catch(e){console.error(e);toast("Impossible de modifier les favoris")}
 }
 
+function openPhoto(url){openCustom(`<img src="${esc(url)}" alt="Photo de l’annonce" style="width:100%;max-height:75vh;object-fit:contain">`)}
 function viewAd(id){
  const a=allAds().find(x=>String(x.id)===String(id));if(!a)return;
- openCustom(`<h2>${esc(a.title)}</h2>${a.image_url?`<img src="${esc(a.image_url)}" alt="Photo de ${esc(a.title)}" style="width:100%;max-height:320px;object-fit:contain;border-radius:12px;margin:10px 0">`:""}<p class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</p><h2 style="color:var(--p)">${money(a.price)}</h2><p>${esc(a.desc)}</p>${a.status==="sold"?'<p style="color:#dc2626;font-weight:800">🔴 Cette annonce est vendue.</p>':""}<button class="full" onclick="contactAd('${a.id}');closeModal()">💬 Contacter l'annonceur</button>`)
+ openCustom(`<h2>${esc(a.title)}</h2>${(a.image_urls?.length||a.image_url)?`<div class="photo-strip">${(a.image_urls?.length?a.image_urls:[a.image_url]).filter(Boolean).map((u,i)=>`<img src="${esc(u)}" alt="Photo ${i+1} de ${esc(a.title)}" onclick="openPhoto(&apos;${esc(u)}&apos;)">`).join("")}</div>`:""}<p class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</p><h2 style="color:var(--p)">${money(a.price)}</h2><p>${esc(a.desc)}</p>${a.status==="sold"?'<p style="color:#dc2626;font-weight:800">🔴 Cette annonce est vendue.</p>':""}<button class="full" onclick="contactAd('${a.id}');closeModal()">💬 Contacter l'annonceur</button>`)
 }
 
 async function register(){
@@ -334,7 +342,7 @@ async function setCurrentFromUser(user){
 
 async function fetchPublicAds(){
  if(!supabaseClient)return [];
- const select="id,user_id,title,category,price,city,description,image_url,created_at,status,type,metier,whatsapp_enabled,whatsapp_phone";
+ const select="id,user_id,title,category,price,city,description,image_url,image_urls,is_featured,created_at,status,type,metier,whatsapp_enabled,whatsapp_phone";
  const {data,error}=await supabaseClient.from("annonces").select(select).order("created_at",{ascending:false});
  if(error)throw error;return data||[]
 }
@@ -355,22 +363,17 @@ async function publishAd(){
  if(!requireClient())return;
  const title=document.getElementById("adTitle").value.trim(),price=Number(document.getElementById("adPrice").value),description=document.getElementById("adDesc").value.trim(),category=document.getElementById("adCat").value,city=document.getElementById("adCity").value,type=document.getElementById("adType").value,metier=type==="service"?document.getElementById("adMetier").value:"";
  const whatsapp_enabled=document.getElementById("waEnabled").checked,whatsapp_phone=document.getElementById("waPhone").value.trim();
- const imageFile=document.getElementById("adImage")?.files?.[0];
- if(!title||!price){toast("Ajoutez un titre et un prix");return}
+ const imageFiles=[...(document.getElementById("adImage")?.files||[])],is_featured=document.getElementById("adFeatured")?.checked||false;
+ if(!title||!price||!city.trim()){toast("Ajoutez un titre, un prix et une ville/localité");return}
  if(whatsapp_enabled&&!whatsapp_phone){toast("Ajoutez votre numéro WhatsApp ou désactivez l'option");return}
- if(imageFile&&(!["image/jpeg","image/png","image/webp"].includes(imageFile.type)||imageFile.size>2*1024*1024)){toast("Photo : JPG, PNG ou WebP de 2 Mo maximum");return}
+ if(imageFiles.length>5||imageFiles.some(f=>!["image/jpeg","image/png","image/webp"].includes(f.type)||f.size>2*1024*1024)){toast("5 photos maximum, JPG/PNG/WebP de 2 Mo chacune");return}
  try{
-  let image_url=null;
-  if(imageFile){
-   const ext=imageFile.type==="image/png"?"png":imageFile.type==="image/webp"?"webp":"jpg";
-   const path=`${current.id}/${Date.now()}-${Math.random().toString(36).slice(2,9)}.${ext}`;
-   const {error:uploadError}=await supabaseClient.storage.from("annonce-photos").upload(path,imageFile,{cacheControl:"3600",upsert:false,contentType:imageFile.type});
-   if(uploadError)throw uploadError;
-   image_url=supabaseClient.storage.from("annonce-photos").getPublicUrl(path).data.publicUrl;
-  }
-  const {error}=await supabaseClient.from("annonces").insert({user_id:current.id,title,category,price,city,description,type,metier,status:"active",image_url,whatsapp_enabled,whatsapp_phone:whatsapp_enabled?whatsapp_phone:null});
+  const image_urls=[];
+  for(let i=0;i<imageFiles.length;i++){const file=imageFiles[i],ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg",path=`${current.id}/${Date.now()}-${i}-${Math.random().toString(36).slice(2,9)}.${ext}`;const {error:uploadError}=await supabaseClient.storage.from("annonce-photos").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});if(uploadError)throw uploadError;image_urls.push(supabaseClient.storage.from("annonce-photos").getPublicUrl(path).data.publicUrl)}
+  const image_url=image_urls[0]||null;
+  const {error}=await supabaseClient.from("annonces").insert({user_id:current.id,title,category,price,city,description,type,metier,status:"active",image_url,image_urls,is_featured,whatsapp_enabled,whatsapp_phone:whatsapp_enabled?whatsapp_phone:null});
   if(error)throw error;
-  document.getElementById("adTitle").value="";document.getElementById("adPrice").value="";document.getElementById("adDesc").value="";document.getElementById("adImage").value="";document.getElementById("adImagePreview").innerHTML="";
+  document.getElementById("adTitle").value="";document.getElementById("adPrice").value="";document.getElementById("adDesc").value="";document.getElementById("adImage").value="";document.getElementById("adImagePreview").innerHTML="";document.getElementById("adFeatured").checked=false;
   document.getElementById("waEnabled").checked=false;document.getElementById("waPhone").value="";toggleWhatsappFields();
   document.getElementById("adType").value="produit";toggleMetier();
   await loadCloudData();toast("Annonce publiée");go("annonces")
@@ -381,7 +384,7 @@ async function loadMessages(){
  if(!current||!supabaseClient){messages=[];return}
  try{
   const {data,error}=await supabaseClient.from("messages").select("id,annonce_id,sender_id,receiver_id,message,created_at,read_at").order("created_at",{ascending:false}).limit(100);
-  if(error)throw error;messages=data||[]
+  if(error)throw error;const fresh=data||[];if(current){const incoming=fresh.filter(m=>m.receiver_id===current.id&&!m.read_at&&!knownUnreadIds.has(String(m.id)));if(knownUnreadIds.size&&incoming.length)toast(`🔔 Nouveau message : ${incoming[0].message.slice(0,65)}`);knownUnreadIds=new Set(fresh.filter(m=>m.receiver_id===current.id&&!m.read_at).map(m=>String(m.id)))}messages=fresh
  }catch(e){console.error(e);messages=[]}
 }
 function unreadCount(){return messages.filter(m=>m.receiver_id===current?.id&&!m.read_at).length}
@@ -580,14 +583,14 @@ async function submitSiteReview(){
 }
 
 (async function init(){
- render(seed);updateAccount();await loadSiteRating();
+ populateLocalities();render(seed);updateAccount();await loadSiteRating();
  if(supabaseClient){
   const {data}=await supabaseClient.auth.getSession();
-  if(data.session){await setCurrentFromUser(data.session.user);await loadMessages();updateAccount()}
+  if(data.session){await setCurrentFromUser(data.session.user);await loadMessages();updateAccount();if(messagePoller)clearInterval(messagePoller);messagePoller=setInterval(async()=>{if(current){await loadMessages();updateAccount()}},30000)}
   await loadCloudData();
   supabaseClient.auth.onAuthStateChange(async(_event,session)=>{
-   if(session){await setCurrentFromUser(session.user);await loadMessages();updateAccount();await loadCloudData()}
-   else{current=null;fav=[];messages=[];updateAccount();render(seed)}
+   if(session){await setCurrentFromUser(session.user);await loadMessages();updateAccount();await loadCloudData();if(messagePoller)clearInterval(messagePoller);messagePoller=setInterval(async()=>{if(current){await loadMessages();updateAccount()}},30000)}
+   else{if(messagePoller)clearInterval(messagePoller);messagePoller=null;knownUnreadIds.clear();current=null;fav=[];messages=[];updateAccount();render(seed)}
   })
  }
 })();
