@@ -1,0 +1,12 @@
+{
+"name": "PrixFaso",
+"short_name": "PrixFaso",
+"id": "/",
+"start_url": "/",
+"scope": "/",
+"display": "standalone",
+"background_color": "#ffffff",
+"theme_color": "#0f766e",
+"orientation": "any",
+"description": "PrixFaso permet de consulter et publier des annonces de produits et de comparer les prix."
+}
