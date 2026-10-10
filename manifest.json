@@ -8,5 +8,13 @@
 "background_color": "#ffffff",
 "theme_color": "#0f766e",
 "orientation": "any",
-"description": "PrixFaso permet de consulter et publier des annonces de produits et de comparer les prix."
+"description": "PrixFaso permet de consulter et publier des annonces de produits et de comparer les prix.",
+"icons": [
+{
+"src": "/prixfaso-512.png",
+"sizes": "512x512",
+"type": "image/png",
+"purpose": "any"
+}
+]
 }
