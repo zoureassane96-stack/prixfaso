@@ -225,6 +225,18 @@ function normalizeAd(a){
  }
 }
 
+function dedupeAds(list){
+ const seen=new Set();
+ return list.filter(a=>{
+  // Ne fusionner que les copies exactes d’une annonce d’un vendeur identifié.
+  if(!a.owner||a.demo)return true;
+  const norm=v=>String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g," ").trim();
+  const key=JSON.stringify([norm(a.owner),norm(a.title),norm(a.cat),norm(a.type),Number(a.price),norm(a.city),norm(a.desc),norm(a.metier),...(a.image_urls||[]).map(norm)]);
+  if(seen.has(key))return false;
+  seen.add(key);return true;
+ });
+}
+
 function allAds(){return ads.length?ads:seed}
 
 function render(list=allAds()){
@@ -354,7 +366,7 @@ async function fetchPublicAds(){
 
 async function loadCloudData(){
  try{
-  const data=await fetchPublicAds();ads=data.map(normalizeAd);fav=[];
+  const data=await fetchPublicAds();ads=dedupeAds(data.map(normalizeAd));fav=[];
   if(current&&supabaseClient){
    const {data:f,error}=await supabaseClient.from("favoris").select("annonce_id").eq("user_id",current.id);
    if(!error)fav=(f||[]).map(x=>x.annonce_id)
