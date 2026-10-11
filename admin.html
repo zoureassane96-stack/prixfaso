@@ -9,7 +9,7 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f6f8;
+      background: #f1f5f9;
       color: #17212b;
     }
     header {
@@ -17,67 +17,134 @@
       color: white;
       padding: 22px 16px;
     }
-    header h1 { margin: 0 0 6px; font-size: 25px; }
-    header p { margin: 0; color: #d8eee1; }
     main {
       max-width: 900px;
       margin: 24px auto;
       padding: 0 16px;
     }
-    .notice, .panel {
+    .panel {
       background: white;
-      border-radius: 12px;
       padding: 20px;
       margin-bottom: 18px;
-      box-shadow: 0 2px 10px #0000000d;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #0001;
     }
-    .notice { border-left: 5px solid #e0a126; }
-    h2 { margin-top: 0; }
-    .links { display: grid; gap: 12px; }
-    a.button {
-      display: block;
-      text-align: center;
-      padding: 14px;
-      border-radius: 8px;
-      text-decoration: none;
-      background: #176b45;
-      color: white;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+    .number {
+      font-size: 32px;
       font-weight: bold;
+      color: #0f766e;
+      margin-top: 12px;
     }
-    a.secondary { background: #e8edf0; color: #17212b; }
-    footer { text-align: center; padding: 24px; color: #687782; }
+    button, a {
+      display: inline-block;
+      padding: 12px 16px;
+      margin: 5px 5px 5px 0;
+      border: 0;
+      border-radius: 8px;
+      background: #0f766e;
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    .secondary { background: #475569; }
+    #message { color: #475569; }
   </style>
 </head>
 <body>
   <header>
     <h1>PrixFaso — Administration</h1>
-    <p>Gestion de la plateforme</p>
+    <p>Statistiques du site</p>
   </header>
 
   <main>
-    <section class="notice">
-      <h2>Accès administrateur en préparation</h2>
-      <p>
-        Cette page est une première interface. Elle ne donne pas encore
-        de droits administrateur et ne doit pas être considérée comme
-        un espace sécurisé.
-      </p>
+    <section class="panel">
+      <h2>Activité de PrixFaso</h2>
+      <p id="message">Chargement des statistiques...</p>
+      <div class="stats">
+        <div class="panel">
+          <div>Total des visites</div>
+          <div class="number" id="visites">—</div>
+        </div>
+        <div class="panel">
+          <div>Visiteurs distincts</div>
+          <div class="number" id="distincts">—</div>
+        </div>
+        <div class="panel">
+          <div>Profils enregistrés</div>
+          <div class="number" id="profils">—</div>
+        </div>
+      </div>
+      <button onclick="chargerStats()">Actualiser</button>
     </section>
 
     <section class="panel">
       <h2>Gestion de PrixFaso</h2>
-      <div class="links">
-        <a class="button" href="https://prixfaso.vercel.app/">
-          Ouvrir le site PrixFaso
-        </a>
-        <a class="button secondary"
-           href="https://supabase.com/dashboard/">
-          Ouvrir Supabase
-        </a>
-      </div>
+      <a href="https://prixfaso.vercel.app">Ouvrir le site PrixFaso</a>
+      <a class="secondary"
+         href="https://supabase.com/dashboard">
+         Ouvrir Supabase
+      </a>
     </section>
   </main>
 
-  <footer>PrixFaso · Espace d’administration</footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://jovyqqqfcgluoclqrwvq.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_JHNtV5gYT00RrBj0jpfNAA_q9z4S2LM";
+
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    async function chargerStats() {
+      document.getElementById("message").textContent =
+        "Chargement des statistiques...";
+
+      const visites = await db
+        .from("site_visits")
+        .select("visitor_key", { count: "exact" });
+
+      if (visites.error) {
+        document.getElementById("message").textContent =
+          "Impossible de lire les visites. Vérifie les autorisations Supabase.";
+        return;
+      }
+
+      const uniques = new Set(
+        (visites.data || [])
+          .map(v => v.visitor_key)
+          .filter(Boolean)
+      );
+
+      document.getElementById("visites").textContent =
+        visites.count ?? 0;
+      document.getElementById("distincts").textContent =
+        uniques.size;
+
+      const profils = await db
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
+
+      if (profils.error) {
+        document.getElementById("profils").textContent = "—";
+        document.getElementById("message").textContent =
+          "Visites chargées, mais la lecture des profils est refusée par Supabase.";
+        return;
+      }
+
+      document.getElementById("profils").textContent =
+        profils.count ?? 0;
+      document.getElementById("message").textContent =
+        "Statistiques chargées.";
+    }
+
+    chargerStats();
+  </script>
 </body>
 </html>
