@@ -7,22 +7,28 @@
   <title>Administration | PrixFaso</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f1f5f9;
       color: #17212b;
     }
+
     header {
       background: #123d2b;
       color: white;
-      padding: 24px 16px;
+      padding: 22px 16px;
     }
+
+    header h1 { margin-top: 0; }
+
     main {
       max-width: 900px;
       margin: 24px auto;
       padding: 0 16px;
     }
+
     .panel {
       background: white;
       padding: 20px;
@@ -30,19 +36,40 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px #0001;
     }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .number {
+      font-size: 32px;
+      font-weight: bold;
+      color: #0f766e;
+      margin-top: 12px;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      font-weight: bold;
+    }
+
     input {
       display: block;
       width: 100%;
-      padding: 13px;
-      margin: 12px 0;
+      padding: 12px;
+      margin-top: 6px;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
       font-size: 16px;
     }
+
     button, .link {
       display: inline-block;
-      padding: 13px 16px;
-      margin: 5px 5px 5px 0;
+      padding: 12px 16px;
+      margin: 12px 6px 0 0;
       border: 0;
       border-radius: 8px;
       background: #0f766e;
@@ -51,25 +78,18 @@
       font-size: 16px;
       cursor: pointer;
     }
+
     .secondary { background: #475569; }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-    }
-    .number {
-      font-size: 34px;
-      font-weight: bold;
-      color: #0f766e;
-      margin-top: 12px;
-    }
+
     #message {
       color: #475569;
       overflow-wrap: anywhere;
     }
+
     [hidden] { display: none !important; }
   </style>
 </head>
+
 <body>
   <header>
     <h1>PrixFaso — Administration</h1>
@@ -80,28 +100,43 @@
     <section class="panel" id="connexion">
       <h2>Connexion administrateur</h2>
       <p>Connecte-toi avec ton compte administrateur Supabase.</p>
+
       <form id="loginForm">
-        <input id="email" type="email"
-          placeholder="Adresse e-mail administrateur" required>
-        <input id="password" type="password"
-          placeholder="Mot de passe Supabase" required>
+        <label for="email">Adresse e-mail</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="username"
+          required
+        >
+
+        <label for="password">Mot de passe</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          required
+        >
+
         <button type="submit">Se connecter</button>
       </form>
     </section>
 
     <section class="panel" id="dashboard" hidden>
       <h2>Activité de PrixFaso</h2>
-      <p id="message">Chargement des statistiques...</p>
+      <p id="message" role="status">Chargement des statistiques...</p>
 
       <div class="stats">
         <div class="panel">
           <div>Total des visites</div>
           <div class="number" id="visites">—</div>
         </div>
+
         <div class="panel">
           <div>Visiteurs distincts</div>
           <div class="number" id="distincts">—</div>
         </div>
+
         <div class="panel">
           <div>Profils enregistrés</div>
           <div class="number" id="profils">—</div>
@@ -109,7 +144,7 @@
       </div>
 
       <button id="refresh">Actualiser</button>
-      <button class="secondary" id="logout">Déconnexion</button>
+      <button id="logout" class="secondary">Déconnexion</button>
     </section>
 
     <section class="panel">
@@ -145,32 +180,53 @@
       el("dashboard").hidden = !connecte;
     }
 
+    function message(texte) {
+      el("message").textContent = texte;
+    }
+
     async function verifierSession() {
       const { data, error } = await db.auth.getSession();
 
       if (error) {
-        el("message").textContent = error.message;
+        afficherConnecte(false);
+        message("Impossible de vérifier la session Supabase.");
         return;
       }
 
       const user = data.session?.user;
 
-      if (user && user.email?.toLowerCase() === ADMIN_EMAIL) {
-        afficherConnecte(true);
-        await chargerStats();
-      } else {
+      if (!user) {
         afficherConnecte(false);
+        return;
       }
+
+      if (user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        await db.auth.signOut();
+        afficherConnecte(false);
+        alert("Ce compte n'est pas autorisé à administrer PrixFaso.");
+        return;
+      }
+
+      afficherConnecte(true);
+      await chargerStats();
     }
 
     el("loginForm").addEventListener("submit", async event => {
       event.preventDefault();
 
-      el("message").textContent = "Connexion en cours...";
+      const email = el("email").value.trim().toLowerCase();
+      const password = el("password").value;
+
+      if (email !== ADMIN_EMAIL.toLowerCase()) {
+        alert("Utilise l'adresse e-mail administrateur autorisée.");
+        return;
+      }
+
+      message("Connexion en cours...");
 
       const { data, error } = await db.auth.signInWithPassword({
-        email: el("email").value.trim(),
-        password: el("password").value
+        email,
+        password
       });
 
       if (error) {
@@ -178,7 +234,7 @@
         return;
       }
 
-      if (data.user?.email?.toLowerCase() !== ADMIN_EMAIL) {
+      if (data.user?.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
         await db.auth.signOut();
         alert("Ce compte n'est pas autorisé à administrer PrixFaso.");
         return;
@@ -189,7 +245,7 @@
     });
 
     async function chargerStats() {
-      el("message").textContent = "Chargement des statistiques...";
+      message("Chargement des statistiques...");
       el("visites").textContent = "—";
       el("distincts").textContent = "—";
       el("profils").textContent = "—";
@@ -197,9 +253,9 @@
       const { data: sessionData } = await db.auth.getSession();
       const user = sessionData.session?.user;
 
-      if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL) {
+      if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
         afficherConnecte(false);
-        el("message").textContent = "Connecte-toi comme administrateur.";
+        message("Reconnecte-toi avec le compte administrateur.");
         return;
       }
 
@@ -208,12 +264,11 @@
         .select("visitor_key", { count: "exact" });
 
       if (visites.error) {
-        el("message").textContent =
-          "Erreur de lecture des visites : " + visites.error.message;
+        message(
+          "Erreur de lecture des visites : " + visites.error.message
+        );
         return;
       }
-
-      el("visites").textContent = visites.count ?? 0;
 
       const uniques = new Set(
         (visites.data || [])
@@ -221,30 +276,38 @@
           .filter(Boolean)
       );
 
+      el("visites").textContent = visites.count ?? 0;
       el("distincts").textContent = uniques.size;
 
       const profils = await db
         .from("profiles")
-        .select("*", { count: "exact", head: true });
+        .select("id", { count: "exact", head: true });
 
       if (profils.error) {
-        el("message").textContent =
+        message(
           "Visites chargées, mais erreur de lecture des profils : " +
-          profils.error.message;
+          profils.error.message
+        );
         return;
       }
 
       el("profils").textContent = profils.count ?? 0;
-      el("message").textContent = "Statistiques chargées.";
+      message("Statistiques chargées.");
     }
 
     el("refresh").addEventListener("click", chargerStats);
 
     el("logout").addEventListener("click", async () => {
-      await db.auth.signOut();
-      afficherConnecte(false);
+      const { error } = await db.auth.signOut();
+
+      if (error) {
+        message("Erreur de déconnexion : " + error.message);
+        return;
+      }
+
       el("password").value = "";
-      el("message").textContent = "Déconnecté.";
+      afficherConnecte(false);
+      message("Déconnecté.");
     });
 
     verifierSession();
