@@ -616,24 +616,36 @@ window.addEventListener("load", () => {
 navigator.serviceWorker.register("/sw.js");
 });
 }
-async function enregistrerVisite(){
-  if(!supabaseClient) return;
 
-  let visiteur = localStorage.getItem("prixfaso_visitor_key");
+async function enregistrerVisite() {
+  if (!supabaseClient) return;
 
-  if(!visiteur){
-    visiteur = crypto.randomUUID();
-    localStorage.setItem("prixfaso_visitor_key", visiteur);
+  try {
+    let visiteur = localStorage.getItem("prixfaso_visitor_key");
+
+    if (!visiteur) {
+      visiteur = crypto.randomUUID();
+      localStorage.setItem("prixfaso_visitor_key", visiteur);
+    }
+
+    // Une seule visite comptée par onglet et par session.
+    if (sessionStorage.getItem("prixfaso_visite_session")) {
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from("site_visits")
+      .insert({ visitor_key: visiteur });
+
+    if (error) {
+      console.error("Erreur suivi visites :", error);
+      return;
+    }
+
+    sessionStorage.setItem("prixfaso_visite_session", "1");
+  } catch (error) {
+    console.error("Suivi des visites indisponible :", error);
   }
-
-  const { error } = await supabaseClient
-    .from("site_visits")
-    .insert({ visitor_key: visiteur });
-
-  if(error) console.error("Erreur suivi visites :", error);
 }
 
 enregistrerVisite();
-</script>
-</body>
-</html>
