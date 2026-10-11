@@ -51,6 +51,7 @@
       text-decoration: none;
       font-size: 15px;
     }
+    button { cursor: pointer; }
     .secondary { background: #475569; }
     #message { color: #475569; }
   </style>
@@ -65,6 +66,7 @@
     <section class="panel">
       <h2>Activité de PrixFaso</h2>
       <p id="message">Chargement des statistiques...</p>
+
       <div class="stats">
         <div class="panel">
           <div>Total des visites</div>
@@ -79,6 +81,7 @@
           <div class="number" id="profils">—</div>
         </div>
       </div>
+
       <button onclick="chargerStats()">Actualiser</button>
     </section>
 
@@ -87,15 +90,18 @@
       <a href="https://prixfaso.vercel.app">Ouvrir le site PrixFaso</a>
       <a class="secondary"
          href="https://supabase.com/dashboard">
-         Ouvrir Supabase
+        Ouvrir Supabase
       </a>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = "https://jovyqqqfcgluoclqrwvq.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_JHNtV5gYT00RrBj0jpfNAA_q9z4S2LM";
+    const SUPABASE_URL =
+      "https://jovyqqqfcgluoclqrwvq.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_JHNtV5gYT00RrBj0jpfNAA_q9z4S2LM";
 
     const db = window.supabase.createClient(
       SUPABASE_URL,
@@ -103,45 +109,55 @@
     );
 
     async function chargerStats() {
-      document.getElementById("message").textContent =
-        "Chargement des statistiques...";
+      const message = document.getElementById("message");
+      message.textContent = "Chargement des statistiques...";
 
-      const visites = await db
-        .from("site_visits")
-        .select("visitor_key", { count: "exact" });
+      document.getElementById("visites").textContent = "—";
+      document.getElementById("distincts").textContent = "—";
+      document.getElementById("profils").textContent = "—";
 
-      if (visites.error) {
-        document.getElementById("message").textContent =
-          "Impossible de lire les visites. Vérifie les autorisations Supabase.";
-        return;
+      try {
+        const visites = await db
+          .from("site_visits")
+          .select("visitor_key", { count: "exact" });
+
+        if (visites.error) {
+          throw new Error(
+            "Lecture des visites refusée : " + visites.error.message
+          );
+        }
+
+        const uniques = new Set(
+          (visites.data || [])
+            .map(v => v.visitor_key)
+            .filter(Boolean)
+        );
+
+        document.getElementById("visites").textContent =
+          visites.count ?? 0;
+
+        document.getElementById("distincts").textContent =
+          uniques.size;
+
+        const profils = await db
+          .from("profiles")
+          .select("*", { count: "exact", head: true });
+
+        if (profils.error) {
+          throw new Error(
+            "Lecture des profils refusée : " + profils.error.message
+          );
+        }
+
+        document.getElementById("profils").textContent =
+          profils.count ?? 0;
+
+        message.textContent = "Statistiques chargées.";
+      } catch (erreur) {
+        message.textContent =
+          "Erreur : " + erreur.message +
+          ". Vérifie les autorisations dans Supabase.";
       }
-
-      const uniques = new Set(
-        (visites.data || [])
-          .map(v => v.visitor_key)
-          .filter(Boolean)
-      );
-
-      document.getElementById("visites").textContent =
-        visites.count ?? 0;
-      document.getElementById("distincts").textContent =
-        uniques.size;
-
-      const profils = await db
-        .from("profiles")
-        .select("*", { count: "exact", head: true });
-
-      if (profils.error) {
-        document.getElementById("profils").textContent = "—";
-        document.getElementById("message").textContent =
-          "Visites chargées, mais la lecture des profils est refusée par Supabase.";
-        return;
-      }
-
-      document.getElementById("profils").textContent =
-        profils.count ?? 0;
-      document.getElementById("message").textContent =
-        "Statistiques chargées.";
     }
 
     chargerStats();
