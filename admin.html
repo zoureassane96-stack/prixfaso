@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -15,7 +16,7 @@
     header {
       background: #123d2b;
       color: white;
-      padding: 22px 16px;
+      padding: 24px 16px;
     }
     main {
       max-width: 900px;
@@ -29,31 +30,44 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px #0001;
     }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
+    input {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      margin: 12px 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
     }
-    .number {
-      font-size: 32px;
-      font-weight: bold;
-      color: #0f766e;
-      margin-top: 12px;
-    }
-    button, a {
+    button, .link {
       display: inline-block;
-      padding: 12px 16px;
+      padding: 13px 16px;
       margin: 5px 5px 5px 0;
       border: 0;
       border-radius: 8px;
       background: #0f766e;
       color: white;
       text-decoration: none;
-      font-size: 15px;
+      font-size: 16px;
+      cursor: pointer;
     }
-    button { cursor: pointer; }
     .secondary { background: #475569; }
-    #message { color: #475569; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+    .number {
+      font-size: 34px;
+      font-weight: bold;
+      color: #0f766e;
+      margin-top: 12px;
+    }
+    #message {
+      color: #475569;
+      overflow-wrap: anywhere;
+    }
+    [hidden] { display: none !important; }
   </style>
 </head>
 <body>
@@ -63,7 +77,19 @@
   </header>
 
   <main>
-    <section class="panel">
+    <section class="panel" id="connexion">
+      <h2>Connexion administrateur</h2>
+      <p>Connecte-toi avec ton compte administrateur Supabase.</p>
+      <form id="loginForm">
+        <input id="email" type="email"
+          placeholder="Adresse e-mail administrateur" required>
+        <input id="password" type="password"
+          placeholder="Mot de passe Supabase" required>
+        <button type="submit">Se connecter</button>
+      </form>
+    </section>
+
+    <section class="panel" id="dashboard" hidden>
       <h2>Activité de PrixFaso</h2>
       <p id="message">Chargement des statistiques...</p>
 
@@ -82,14 +108,16 @@
         </div>
       </div>
 
-      <button onclick="chargerStats()">Actualiser</button>
+      <button id="refresh">Actualiser</button>
+      <button class="secondary" id="logout">Déconnexion</button>
     </section>
 
     <section class="panel">
       <h2>Gestion de PrixFaso</h2>
-      <a href="https://prixfaso.vercel.app">Ouvrir le site PrixFaso</a>
-      <a class="secondary"
-         href="https://supabase.com/dashboard">
+      <a class="link" href="https://prixfaso.vercel.app">
+        Ouvrir le site PrixFaso
+      </a>
+      <a class="link secondary" href="https://supabase.com/dashboard">
         Ouvrir Supabase
       </a>
     </section>
@@ -103,64 +131,123 @@
     const SUPABASE_KEY =
       "sb_publishable_JHNtV5gYT00RrBj0jpfNAA_q9z4S2LM";
 
+    const ADMIN_EMAIL = "zoureassane.96@gmail.com";
+
     const db = window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_KEY
     );
 
-    async function chargerStats() {
-      const message = document.getElementById("message");
-      message.textContent = "Chargement des statistiques...";
+    const el = id => document.getElementById(id);
 
-      document.getElementById("visites").textContent = "—";
-      document.getElementById("distincts").textContent = "—";
-      document.getElementById("profils").textContent = "—";
+    function afficherConnecte(connecte) {
+      el("connexion").hidden = connecte;
+      el("dashboard").hidden = !connecte;
+    }
 
-      try {
-        const visites = await db
-          .from("site_visits")
-          .select("visitor_key", { count: "exact" });
+    async function verifierSession() {
+      const { data, error } = await db.auth.getSession();
 
-        if (visites.error) {
-          throw new Error(
-            "Lecture des visites refusée : " + visites.error.message
-          );
-        }
+      if (error) {
+        el("message").textContent = error.message;
+        return;
+      }
 
-        const uniques = new Set(
-          (visites.data || [])
-            .map(v => v.visitor_key)
-            .filter(Boolean)
-        );
+      const user = data.session?.user;
 
-        document.getElementById("visites").textContent =
-          visites.count ?? 0;
-
-        document.getElementById("distincts").textContent =
-          uniques.size;
-
-        const profils = await db
-          .from("profiles")
-          .select("*", { count: "exact", head: true });
-
-        if (profils.error) {
-          throw new Error(
-            "Lecture des profils refusée : " + profils.error.message
-          );
-        }
-
-        document.getElementById("profils").textContent =
-          profils.count ?? 0;
-
-        message.textContent = "Statistiques chargées.";
-      } catch (erreur) {
-        message.textContent =
-          "Erreur : " + erreur.message +
-          ". Vérifie les autorisations dans Supabase.";
+      if (user && user.email?.toLowerCase() === ADMIN_EMAIL) {
+        afficherConnecte(true);
+        await chargerStats();
+      } else {
+        afficherConnecte(false);
       }
     }
 
-    chargerStats();
+    el("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+
+      el("message").textContent = "Connexion en cours...";
+
+      const { data, error } = await db.auth.signInWithPassword({
+        email: el("email").value.trim(),
+        password: el("password").value
+      });
+
+      if (error) {
+        alert("Connexion impossible : " + error.message);
+        return;
+      }
+
+      if (data.user?.email?.toLowerCase() !== ADMIN_EMAIL) {
+        await db.auth.signOut();
+        alert("Ce compte n'est pas autorisé à administrer PrixFaso.");
+        return;
+      }
+
+      afficherConnecte(true);
+      await chargerStats();
+    });
+
+    async function chargerStats() {
+      el("message").textContent = "Chargement des statistiques...";
+      el("visites").textContent = "—";
+      el("distincts").textContent = "—";
+      el("profils").textContent = "—";
+
+      const { data: sessionData } = await db.auth.getSession();
+      const user = sessionData.session?.user;
+
+      if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL) {
+        afficherConnecte(false);
+        el("message").textContent = "Connecte-toi comme administrateur.";
+        return;
+      }
+
+      const visites = await db
+        .from("site_visits")
+        .select("visitor_key", { count: "exact" });
+
+      if (visites.error) {
+        el("message").textContent =
+          "Erreur de lecture des visites : " + visites.error.message;
+        return;
+      }
+
+      el("visites").textContent = visites.count ?? 0;
+
+      const uniques = new Set(
+        (visites.data || [])
+          .map(v => v.visitor_key)
+          .filter(Boolean)
+      );
+
+      el("distincts").textContent = uniques.size;
+
+      const profils = await db
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
+
+      if (profils.error) {
+        el("message").textContent =
+          "Visites chargées, mais erreur de lecture des profils : " +
+          profils.error.message;
+        return;
+      }
+
+      el("profils").textContent = profils.count ?? 0;
+      el("message").textContent = "Statistiques chargées.";
+    }
+
+    el("refresh").addEventListener("click", chargerStats);
+
+    el("logout").addEventListener("click", async () => {
+      await db.auth.signOut();
+      afficherConnecte(false);
+      el("password").value = "";
+      el("message").textContent = "Déconnecté.";
+    });
+
+    verifierSession();
   </script>
 </body>
 </html>
