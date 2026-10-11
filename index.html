@@ -616,6 +616,24 @@ window.addEventListener("load", () => {
 navigator.serviceWorker.register("/sw.js");
 });
 }
+async function enregistrerVisite(){
+  if(!supabaseClient) return;
+
+  let visiteur = localStorage.getItem("prixfaso_visitor_key");
+
+  if(!visiteur){
+    visiteur = crypto.randomUUID();
+    localStorage.setItem("prixfaso_visitor_key", visiteur);
+  }
+
+  const { error } = await supabaseClient
+    .from("site_visits")
+    .insert({ visitor_key: visiteur });
+
+  if(error) console.error("Erreur suivi visites :", error);
+}
+
+enregistrerVisite();
 </script>
 </body>
 </html>
