@@ -26,7 +26,7 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 .dash{display:none}.dash.show{display:block}.empty{text-align:center;padding:40px;color:var(--muted);background:#fff;border:1px dashed var(--border);border-radius:15px}.toast{position:fixed;right:16px;bottom:16px;background:#123d38;color:#fff;padding:13px 17px;border-radius:10px;display:none;z-index:100}.toast.show{display:block}
 .msg-list{display:grid;gap:10px}.msg-item{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px}.msg-item.unread{border-color:#8acfc3;box-shadow:0 0 0 2px #e2f4f0}.badge,.unread-nav{display:inline-block;background:var(--p);color:#fff;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:800}.conversation{display:grid;gap:9px;margin-top:12px}.bubble{max-width:86%;padding:11px 13px;border-radius:14px;background:#eef5f3}.bubble.mine{margin-left:auto;background:#dff4ef}.reply-row{display:flex;gap:8px;margin-top:14px;align-items:flex-end}.reply-row textarea{flex:1;min-height:70px}.reply-row button{padding:11px 14px;border-radius:10px;background:var(--p);color:#fff;font-weight:800}
 .rating-box{background:#f7fbfa;border:1px solid var(--border);border-radius:14px;padding:14px;margin:12px 0}.stars{color:#f59e0b;font-size:22px;letter-spacing:1px}.rating-score{font-size:28px;font-weight:900;color:var(--p)}.review-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:13px;margin-top:9px}
-.star-choice{display:flex;gap:5px;flex-direction:row-reverse;justify-content:flex-end}.star-choice button{background:transparent;font-size:30px;color:#cbd5d1;padding:2px}.star-choice button.selected,.star-choice button:hover,.star-choice button:hover~button{color:#f59e0b}.photo-preview{display:flex;gap:8px;flex-wrap:wrap}.photo-preview img{width:92px;height:82px;object-fit:cover;border-radius:9px;border:1px solid var(--border)}.featured-card{border:2px solid #f4b740}.featured-tag{display:inline-block;background:#fff2cc;color:#805b00;padding:3px 7px;border-radius:7px;font-size:11px;font-weight:800;margin-bottom:6px}.photo-strip{display:flex;gap:6px;overflow:auto;margin:8px 0}.photo-strip img{height:74px;width:78px;object-fit:cover;border-radius:8px;flex:0 0 auto}
+.star-choice{display:flex;gap:5px;flex-direction:row-reverse;justify-content:flex-end}.star-choice button{background:transparent;font-size:30px;color:#cbd5d1;padding:2px}.star-choice button.selected,.star-choice button:hover,.star-choice button:hover~button{color:#f59e0b}.photo-preview{display:flex;gap:8px;flex-wrap:wrap}.photo-preview img{width:92px;height:82px;object-fit:cover;border-radius:9px;border:1px solid var(--border)}.featured-card{border:2px solid #f4b740}.featured-tag{display:inline-block;background:#fff2cc;color:#805b00;padding:3px 7px;border-radius:7px;font-size:11px;font-weight:800;margin-bottom:6px}.photo-strip{display:flex;gap:6px;overflow:auto;margin:8px 0}.photo-strip img{height:74px;width:78px;object-fit:cover;border-radius:8px;flex:0 0 auto;cursor:pointer}.photo-viewer{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0}.photo-viewer img{max-width:100%;max-height:62vh;object-fit:contain;border-radius:10px}.photo-viewer button{background:#eef5f3;color:var(--p);padding:10px 13px;border-radius:9px;font-weight:800}.back-home{display:inline-flex;align-items:center;gap:7px;margin:0 0 14px;padding:10px 14px;border-radius:10px;background:#eef5f3;color:var(--p);font-weight:800;border:1px solid #cfe5df}.dash-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 @media(max-width:800px){.navlinks{display:none}.grid{grid-template-columns:1fr 1fr}.features{grid-template-columns:1fr 1fr}.search{flex-wrap:wrap}.search input{flex-basis:100%}}
 @media(max-width:520px){main{padding:14px 10px 45px}.hero{padding:24px 15px;border-radius:17px}.hero p{font-size:15px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.features{grid-template-columns:1fr}.logo{font-size:21px}nav{height:auto;min-height:60px;padding:10px 12px;gap:6px}.account button{padding:8px 9px;font-size:12px}.thumb{height:125px}.body{padding:10px}.card .row{align-items:flex-start}.card .row strong{font-size:14px;overflow-wrap:anywhere}.price{font-size:17px}.card .meta{font-size:12px}.small{padding:8px 9px;font-size:12px}.box{padding:16px}.search{gap:6px}.search select,.search input{width:100%;flex-basis:100%}.search button{width:100%}.filters input,.filters select{width:100%;min-width:0}.filters{display:grid;grid-template-columns:1fr 1fr}.filters button{grid-column:1/-1}.reply-row{flex-wrap:wrap}.reply-row textarea{min-width:100%}}
 </style>
@@ -42,6 +42,7 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 <button onclick="go('annonces')">Annonces</button>
 <button onclick="go('publier')">Publier</button>
 <button onclick="go('dashboard')">Mon espace</button>
+<button id="adminNavButton" style="display:none" onclick="go('admin')">🛡️ Administration</button>
 </div>
 <div class="account" id="account">
 <button class="outline" onclick="openModal('login')">Connexion</button>
@@ -95,10 +96,19 @@ footer{background:#082f2c;color:#dcefeb;padding:35px 5%;text-align:center}footer
 </section>
 
 <section class="section dash" id="dashboard">
+<button class="back-home" onclick="go('home')">← Retour au menu principal</button>
 <h2>Mon espace</h2><div id="dashContent"></div>
 </section>
 
+<section class="section dash" id="adminDashboard">
+<button class="back-home" onclick="go('home')">← Retour au menu principal</button>
+<div class="dash-head"><h2>🛡️ Administration PrixFaso</h2><button class="small" onclick="loadAdminDashboard()">↻ Actualiser</button></div>
+<p class="meta">Espace réservé au compte administrateur autorisé dans Supabase.</p>
+<div id="adminContent"><div class="empty">Chargement de l’administration…</div></div>
+</section>
+
 <section class="section dash" id="publier">
+<button class="back-home" onclick="go('home')">← Retour au menu principal</button>
 <h2>Publier une annonce</h2>
 <div class="box" style="display:block;max-width:650px;margin:auto">
 <div class="field"><label>Titre</label><input id="adTitle" placeholder="Ex. Sac de ciment 50 kg"></div>
@@ -140,6 +150,7 @@ if(window.supabase&&window.supabase.createClient){
 }
 
 let current=null,ads=[],fav=[],messages=[],currentCat="Tous",knownUnreadIds=new Set(),messagePoller=null;
+let isAdmin=false, presenceTimer=null, visitTracked=false;
 
 const seed=[
 {id:"demo-1",title:"Ciment CPJ 35 — sac 50 kg",cat:"Matériaux",price:6500,city:"Ouagadougou",icon:"🏗️",desc:"Sac de ciment 50 kg, disponible en quantité.",demo:true},
@@ -176,6 +187,13 @@ function openModal(type){
 
 function go(id){
  document.querySelectorAll(".dash").forEach(x=>x.classList.remove("show"));
+ if(id==="admin"){
+   if(!current){openModal("login");return}
+   if(!isAdmin){toast("Accès réservé à l’administration");return}
+   document.getElementById("adminDashboard").classList.add("show");
+   document.getElementById("adminDashboard").scrollIntoView({behavior:"smooth"});
+   loadAdminDashboard();return;
+ }
  if(id==="dashboard"){
    if(!current){openModal("login");return}
    document.getElementById("dashboard").classList.add("show");renderDash();
@@ -228,7 +246,7 @@ function render(list=allAds()){
  if(!list.length){c.innerHTML='<div class="empty" style="grid-column:1/-1">Aucune annonce trouvée.</div>';return}
  c.innerHTML=list.map(a=>`
  <article class="card ${a.is_featured?"featured-card":""}">
- <div class="thumb">${(a.image_urls?.[0]||a.image_url)?`<img src="${esc(a.image_urls?.[0]||a.image_url)}" alt="Photo de ${esc(a.title)}" style="width:100%;height:100%;object-fit:cover">`:(a.icon||"📦")}</div>
+ <div class="thumb">${(a.image_urls?.[0]||a.image_url)?`<img src="${esc(a.image_urls?.[0]||a.image_url)}" alt="Voir les photos de ${esc(a.title)}" onclick="viewAd('${a.id}')" style="width:100%;height:100%;object-fit:cover;cursor:zoom-in">`:(a.icon||"📦")}</div>
  <div class="body">
  ${a.is_featured?'<div class="featured-tag">⭐ À LA UNE · GRATUIT</div>':""}
  ${a.image_urls?.length>1?`<div class="meta">📷 ${a.image_urls.length} photos</div>`:""}
@@ -287,10 +305,24 @@ async function toggleFav(id){
  }catch(e){console.error(e);toast("Impossible de modifier les favoris")}
 }
 
-function openPhoto(url){openCustom(`<img src="${esc(url)}" alt="Photo de l’annonce" style="width:100%;max-height:75vh;object-fit:contain">`)}
+function openPhotoGallery(urls,index=0,title="Photos de l’annonce"){
+ const list=(Array.isArray(urls)?urls:[urls]).filter(Boolean);
+ if(!list.length)return;
+ let at=Math.max(0,Math.min(Number(index)||0,list.length-1));
+ const draw=()=>{
+  document.getElementById("modalBody").innerHTML=`<div class="dash-head"><h2>${esc(title)}</h2><button class="close" onclick="closeModal()">×</button></div><div class="photo-viewer">${list.length>1?`<button aria-label="Photo précédente" onclick="moveGallery(-1)">‹</button>`:""}<img src="${esc(list[at])}" alt="Photo ${at+1} sur ${list.length}">${list.length>1?`<button aria-label="Photo suivante" onclick="moveGallery(1)">›</button>`:""}</div><p class="meta" style="text-align:center">Photo ${at+1} / ${list.length} · Touchez les flèches pour parcourir les photos</p>${list.length>1?`<div class="photo-strip" style="justify-content:center">${list.map((u,i)=>`<img src="${esc(u)}" alt="Miniature ${i+1}" onclick="setGalleryPhoto(${i})" style="border:${i===at?'2px solid var(--p)':'1px solid var(--border)'}">`).join("")}</div>`:""}`;
+ };
+ window.__prixFasoGallery={list,getIndex:()=>at,setIndex:(n)=>{at=(n+list.length)%list.length;draw()}};
+ draw();document.getElementById("modal").classList.add("open");
+}
+function moveGallery(delta){const g=window.__prixFasoGallery;if(g)g.setIndex(g.getIndex()+delta)}
+function setGalleryPhoto(index){const g=window.__prixFasoGallery;if(g)g.setIndex(index)}
+function openPhoto(url){openPhotoGallery([url],0,"Photo du produit")}
+function openAdGallery(id,index=0){const a=allAds().find(x=>String(x.id)===String(id));if(!a)return;const photos=(a.image_urls?.length?a.image_urls:[a.image_url]).filter(Boolean);openPhotoGallery(photos,index,a.title||"Photos de l’annonce")}
 function viewAd(id){
  const a=allAds().find(x=>String(x.id)===String(id));if(!a)return;
- openCustom(`<h2>${esc(a.title)}</h2>${(a.image_urls?.length||a.image_url)?`<div class="photo-strip">${(a.image_urls?.length?a.image_urls:[a.image_url]).filter(Boolean).map((u,i)=>`<img src="${esc(u)}" alt="Photo ${i+1} de ${esc(a.title)}" onclick="openPhoto(&apos;${esc(u)}&apos;)">`).join("")}</div>`:""}<p class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</p><h2 style="color:var(--p)">${money(a.price)}</h2><p>${esc(a.desc)}</p>${a.status==="sold"?'<p style="color:#dc2626;font-weight:800">🔴 Cette annonce est vendue.</p>':""}<button class="full" onclick="contactAd('${a.id}');closeModal()">💬 Contacter l'annonceur</button>`)
+ const photos=(a.image_urls?.length?a.image_urls:[a.image_url]).filter(Boolean);
+ openCustom(`<h2>${esc(a.title)}</h2>${photos.length?`<div class="photo-strip">${photos.map((u,i)=>`<img src="${esc(u)}" alt="Photo ${i+1} de ${esc(a.title)}" onclick="openAdGallery('${a.id}',${i})">`).join("")}</div><button class="small" onclick="openAdGallery('${a.id}',0)">🔍 Voir les ${photos.length} photo(s) en grand</button>`:"<div class='empty'>Aucune photo pour cette annonce.</div>"}<p class="meta">📍 ${esc(a.city)} · ${a.type==="service"?"🛠️ "+esc(a.metier||"Service"):esc(a.cat)}</p><h2 style="color:var(--p)">${money(a.price)}</h2><p>${esc(a.desc)}</p>${a.status==="sold"?'<p style="color:#dc2626;font-weight:800">🔴 Cette annonce est vendue.</p>':""}<button class="full" onclick="contactAd('${a.id}');closeModal()">💬 Contacter l'annonceur</button>`)
 }
 
 async function register(){
@@ -332,19 +364,19 @@ async function ensureProfile(user,name,phone){
 async function setCurrentFromUser(user){
  if(!user){current=null;return}
  if(!supabaseClient)return;
- let {data:profile}=await supabaseClient.from("profiles").select("id,name,phone,avatar_url").eq("id",user.id).maybeSingle();
+ let {data:profile}=await supabaseClient.from("profiles").select("id,name,phone,avatar_url,role").eq("id",user.id).maybeSingle();
  if(!profile){
   const name=user.user_metadata?.name||user.email?.split("@")[0]||"Utilisateur",phone=user.user_metadata?.phone||"";
-  await ensureProfile(user,name,phone);profile={id:user.id,name,phone,avatar_url:""}
+  await ensureProfile(user,name,phone);profile={id:user.id,name,phone,avatar_url:"",role:"user"}
  }
- current={id:user.id,name:profile.name||"Utilisateur",phone:profile.phone||"",email:user.email||"",avatar_url:profile.avatar_url||""}
+ current={id:user.id,name:profile.name||"Utilisateur",phone:profile.phone||"",email:user.email||"",avatar_url:profile.avatar_url||"",role:profile.role||"user"};isAdmin=current.role==="admin"
 }
 
 async function fetchPublicAds(){
  if(!supabaseClient)return [];
  const select="id,user_id,title,category,price,city,description,image_url,image_urls,is_featured,created_at,status,type,metier,whatsapp_enabled,whatsapp_phone";
  const {data,error}=await supabaseClient.from("annonces").select(select).order("created_at",{ascending:false});
- if(error)throw error;return data||[]
+ if(error)throw error;return (data||[]).filter(a=>a.status!=="hidden"&&a.status!=="deleted")
 }
 
 async function loadCloudData(){
@@ -390,8 +422,9 @@ async function loadMessages(){
 function unreadCount(){return messages.filter(m=>m.receiver_id===current?.id&&!m.read_at).length}
 function unreadBadge(){const n=unreadCount();return n?`<span class="unread-nav">${n}</span>`:""}
 function updateAccount(){
+ const adminButton=document.getElementById("adminNavButton");if(adminButton)adminButton.style.display=(current&&isAdmin)?"inline-block":"none";
  document.getElementById("account").innerHTML=current
- ?`<button onclick="go('dashboard')">👤 ${esc((current.name||"Utilisateur").split(" ")[0])}${unreadBadge()}</button><button class="outline" onclick="logout()">Déconnexion</button>`
+ ?`<button onclick="go('dashboard')">👤 ${esc((current.name||"Utilisateur").split(" ")[0])}${unreadBadge()}</button>${isAdmin?`<button class="primary" onclick="go('admin')">🛡️ Admin</button>`:""}<button class="outline" onclick="logout()">Déconnexion</button>`
  :`<button class="outline" onclick="openModal('login')">Connexion</button><button class="primary" onclick="openModal('register')">Inscription</button>`
 }
 
@@ -524,6 +557,70 @@ async function deleteAd(id){
  await loadCloudData();renderDash();toast("Annonce supprimée")
 }
 
+function adminEscape(s){return esc(s)}
+async function trackPrixFasoVisit(){
+ if(!supabaseClient||visitTracked)return;
+ visitTracked=true;
+ try{
+  let visitorId=localStorage.getItem("prixfaso_visitor_id");
+  if(!visitorId){visitorId=(crypto.randomUUID?crypto.randomUUID():"v-"+Date.now()+"-"+Math.random().toString(36).slice(2));localStorage.setItem("prixfaso_visitor_id",visitorId)}
+  const now=new Date(),day=now.toISOString().slice(0,10);
+  await supabaseClient.rpc("track_site_visit",{p_visitor_id:visitorId,p_visit_day:day});
+  await supabaseClient.rpc("track_site_presence",{p_visitor_id:visitorId});
+ }catch(e){console.warn("Statistiques PrixFaso non disponibles :",e.message||e)}
+}
+async function updatePrixFasoPresence(){
+ if(!supabaseClient)return;
+ try{
+  const visitorId=localStorage.getItem("prixfaso_visitor_id");if(!visitorId)return;
+  await supabaseClient.rpc("track_site_presence",{p_visitor_id:visitorId});
+ }catch(e){console.warn("Présence non actualisée",e.message||e)}
+}
+async function loadAdminDashboard(){
+ const root=document.getElementById("adminContent");
+ if(!current||!isAdmin){root.innerHTML='<div class="empty">Accès refusé.</div>';return}
+ root.innerHTML='<div class="empty">Chargement des statistiques et des annonces…</div>';
+ try{
+  const since=new Date(Date.now()-5*60*1000).toISOString();
+  const today=new Date().toISOString().slice(0,10);
+  const [usersRes,adsRes,visitsRes,presenceRes,profilesRes]=await Promise.all([
+   supabaseClient.from("profiles").select("id",{count:"exact",head:true}),
+   supabaseClient.from("annonces").select("id,title,status,city,price,created_at",{count:"exact"}),
+   supabaseClient.from("site_visits").select("visitor_id",{count:"exact",head:true}).eq("visit_day",today),
+   supabaseClient.from("site_presence").select("visitor_id,user_id,last_seen",{count:"exact"}).gte("last_seen",since),
+   supabaseClient.from("profiles").select("id,name,phone,role")
+  ]);
+  const err=[usersRes,adsRes,visitsRes,presenceRes,profilesRes].find(x=>x.error);
+  if(err)throw err.error;
+  const all=adsRes.data||[],people=profilesRes.data||[],presence=presenceRes.data||[];
+  const active=all.filter(a=>a.status!=="hidden"&&a.status!=="deleted").length, onlineUsers=new Set(presence.filter(p=>p.user_id).map(p=>p.user_id)).size;
+  root.innerHTML=`
+   <div class="features">
+    <div class="feature">👥<b>${usersRes.count??people.length}</b><span>Comptes inscrits</span></div>
+    <div class="feature">📢<b>${active}</b><span>Annonces enregistrées</span></div>
+    <div class="feature">👁️<b>${visitsRes.count??0}</b><span>Visiteurs suivis aujourd’hui*</span></div>
+    <div class="feature">🟢<b>${onlineUsers}</b><span>Comptes connectés actifs (5 min)</span></div>
+   </div>
+   <p class="meta">*Les statistiques commencent après l’installation du SQL ci-joint. Un visiteur correspond à un navigateur suivi par PrixFaso, pas à une mesure parfaite des personnes réelles.</p>
+   <div class="section"><div class="row"><h3>📢 Modération des annonces</h3><button class="small" onclick="loadAdminDashboard()">↻ Actualiser</button></div>
+   ${all.length?`<div class="msg-list">${all.map(a=>{return `<div class="msg-item"><b>${adminEscape(a.title||"Annonce")}</b><div class="meta">${adminEscape(a.city||"")} · ${money(a.price||0)} · Statut : ${adminEscape(a.status||"active")}</div><div class="row"><button class="small" onclick="adminSetAdStatus('${a.id}','active')">Activer</button><button class="small" onclick="adminSetAdStatus('${a.id}','hidden')">Masquer</button><button class="small" onclick="adminDeleteAd('${a.id}')" style="color:#b91c1c">Supprimer</button></div></div>`}).join("")}</div>`:'<div class="empty">Aucune annonce enregistrée.</div>'}</div>
+   <div class="section"><h3>👤 Comptes utilisateurs</h3>${people.length?`<div class="msg-list">${people.map(p=>`<div class="msg-item"><b>${adminEscape(p.name||"Utilisateur")}</b><div class="meta">ID : ${adminEscape(p.id)} · Téléphone : ${adminEscape(p.phone||"Non renseigné")} · Rôle : ${adminEscape(p.role||"user")}</div></div>`).join("")}</div>`:'<div class="empty">Aucun profil accessible.</div>'}</div>`;
+ }catch(e){console.error("Admin PrixFaso:",e);root.innerHTML=`<div class="empty">Impossible de charger l’administration. Vérifie que le script SQL d’installation a été exécuté dans Supabase et que ton profil a le rôle admin.<br><br><small>${adminEscape(e.message||"Erreur inconnue")}</small></div>`}
+}
+async function adminSetAdStatus(id,status){
+ if(!current||!isAdmin){toast("Accès refusé");return}
+ const {error}=await supabaseClient.from("annonces").update({status}).eq("id",id);
+ if(error){toast("Modification refusée : "+error.message);return}
+ await loadCloudData();await loadAdminDashboard();toast(status==="hidden"?"Annonce masquée":"Annonce activée");
+}
+async function adminDeleteAd(id){
+ if(!current||!isAdmin){toast("Accès refusé");return}
+ if(!confirm("Supprimer définitivement cette annonce ? Cette action est irréversible."))return;
+ const {error}=await supabaseClient.from("annonces").delete().eq("id",id);
+ if(error){toast("Suppression refusée : "+error.message);return}
+ await loadCloudData();await loadAdminDashboard();toast("Annonce supprimée");
+}
+
 function starsHtml(n){return "★★★★★".split("").map((s,i)=>`<span style="opacity:${i<Number(n)?1:.25}">${s}</span>`).join("")}
 
 async function openSeller(ownerId){
@@ -588,9 +685,10 @@ async function submitSiteReview(){
   const {data}=await supabaseClient.auth.getSession();
   if(data.session){await setCurrentFromUser(data.session.user);await loadMessages();updateAccount();if(messagePoller)clearInterval(messagePoller);messagePoller=setInterval(async()=>{if(current){await loadMessages();updateAccount()}},30000)}
   await loadCloudData();
+  await trackPrixFasoVisit();if(presenceTimer)clearInterval(presenceTimer);presenceTimer=setInterval(updatePrixFasoPresence,60000);
   supabaseClient.auth.onAuthStateChange(async(_event,session)=>{
-   if(session){await setCurrentFromUser(session.user);await loadMessages();updateAccount();await loadCloudData();if(messagePoller)clearInterval(messagePoller);messagePoller=setInterval(async()=>{if(current){await loadMessages();updateAccount()}},30000)}
-   else{if(messagePoller)clearInterval(messagePoller);messagePoller=null;knownUnreadIds.clear();current=null;fav=[];messages=[];updateAccount();render(seed)}
+   if(session){await setCurrentFromUser(session.user);await loadMessages();updateAccount();await loadCloudData();await updatePrixFasoPresence();if(messagePoller)clearInterval(messagePoller);messagePoller=setInterval(async()=>{if(current){await loadMessages();updateAccount()}},30000)}
+   else{if(messagePoller)clearInterval(messagePoller);messagePoller=null;knownUnreadIds.clear();current=null;isAdmin=false;fav=[];messages=[];updateAccount();render(seed);await updatePrixFasoPresence()}
   })
  }
 })();
