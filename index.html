@@ -628,7 +628,7 @@ async function enregistrerVisite() {
       localStorage.setItem("prixfaso_visitor_key", visiteur);
     }
 
-    // Une seule visite comptée par onglet et par session.
+  
     if (sessionStorage.getItem("prixfaso_visite_session")) {
       return;
     }
