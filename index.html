@@ -364,12 +364,14 @@ async function ensureProfile(user,name,phone){
 async function setCurrentFromUser(user){
  if(!user){current=null;return}
  if(!supabaseClient)return;
- let {data:profile}=await supabaseClient.from("profiles").select("id,name,phone,avatar_url,role").eq("id",user.id).maybeSingle();
+ let {data:profile,error:profileError}=await supabaseClient.from("profiles").select("id,name,phone,avatar_url").eq("id",user.id).maybeSingle();
+ if(profileError && !String(profileError.message||"").toLowerCase().includes("avatar_url")) console.warn("Lecture du profil:",profileError.message);
+ if(profileError && String(profileError.message||"").toLowerCase().includes("avatar_url")){ const retry=await supabaseClient.from("profiles").select("id,name,phone").eq("id",user.id).maybeSingle(); profile=retry.data; }
  if(!profile){
   const name=user.user_metadata?.name||user.email?.split("@")[0]||"Utilisateur",phone=user.user_metadata?.phone||"";
-  await ensureProfile(user,name,phone);profile={id:user.id,name,phone,avatar_url:"",role:"user"}
+  await ensureProfile(user,name,phone);profile={id:user.id,name,phone,avatar_url:""}
  }
- current={id:user.id,name:profile.name||"Utilisateur",phone:profile.phone||"",email:user.email||"",avatar_url:profile.avatar_url||"",role:profile.role||"user"};isAdmin=current.role==="admin"
+ const adminEmail="zoureassane96@gmail.com";isAdmin=String(user.email||"").toLowerCase()===adminEmail;current={id:user.id,name:profile.name||"Utilisateur",phone:profile.phone||"",email:user.email||"",avatar_url:profile.avatar_url||"",role:isAdmin?"admin":"user"}
 }
 
 async function fetchPublicAds(){
@@ -564,8 +566,7 @@ async function trackPrixFasoVisit(){
  try{
   let visitorId=localStorage.getItem("prixfaso_visitor_id");
   if(!visitorId){visitorId=(crypto.randomUUID?crypto.randomUUID():"v-"+Date.now()+"-"+Math.random().toString(36).slice(2));localStorage.setItem("prixfaso_visitor_id",visitorId)}
-  const now=new Date(),day=now.toISOString().slice(0,10);
-  await supabaseClient.rpc("track_site_visit",{p_visitor_id:visitorId,p_visit_day:day});
+  await supabaseClient.rpc("track_site_visit",{p_visitor_id:visitorId});
   await supabaseClient.rpc("track_site_presence",{p_visitor_id:visitorId});
  }catch(e){console.warn("Statistiques PrixFaso non disponibles :",e.message||e)}
 }
@@ -581,31 +582,31 @@ async function loadAdminDashboard(){
  if(!current||!isAdmin){root.innerHTML='<div class="empty">Accès refusé.</div>';return}
  root.innerHTML='<div class="empty">Chargement des statistiques et des annonces…</div>';
  try{
+  const now=new Date(),todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString(),tomorrowStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1).toISOString();
   const since=new Date(Date.now()-5*60*1000).toISOString();
-  const today=new Date().toISOString().slice(0,10);
-  const [usersRes,adsRes,visitsRes,presenceRes,profilesRes]=await Promise.all([
+  const [usersRes,adsRes,visitsRes,activityRes,profilesRes]=await Promise.all([
    supabaseClient.from("profiles").select("id",{count:"exact",head:true}),
    supabaseClient.from("annonces").select("id,title,status,city,price,created_at",{count:"exact"}),
-   supabaseClient.from("site_visits").select("visitor_id",{count:"exact",head:true}).eq("visit_day",today),
-   supabaseClient.from("site_presence").select("visitor_id,user_id,last_seen",{count:"exact"}).gte("last_seen",since),
-   supabaseClient.from("profiles").select("id,name,phone,role")
+   supabaseClient.from("site_visits").select("visitor_key",{count:"exact",head:true}).gte("visited_at",todayStart).lt("visited_at",tomorrowStart),
+   supabaseClient.from("user_activity").select("user_id,last_seen").gte("last_seen",since),
+   supabaseClient.from("profiles").select("id,name,phone")
   ]);
-  const err=[usersRes,adsRes,visitsRes,presenceRes,profilesRes].find(x=>x.error);
+  const err=[usersRes,adsRes,visitsRes,activityRes,profilesRes].find(x=>x.error);
   if(err)throw err.error;
-  const all=adsRes.data||[],people=profilesRes.data||[],presence=presenceRes.data||[];
-  const active=all.filter(a=>a.status!=="hidden"&&a.status!=="deleted").length, onlineUsers=new Set(presence.filter(p=>p.user_id).map(p=>p.user_id)).size;
+  const all=adsRes.data||[],people=profilesRes.data||[],presence=activityRes.data||[];
+  const active=all.filter(a=>a.status!=="hidden"&&a.status!=="deleted").length, onlineUsers=new Set(presence.map(p=>p.user_id)).size;
   root.innerHTML=`
    <div class="features">
     <div class="feature">👥<b>${usersRes.count??people.length}</b><span>Comptes inscrits</span></div>
     <div class="feature">📢<b>${active}</b><span>Annonces enregistrées</span></div>
-    <div class="feature">👁️<b>${visitsRes.count??0}</b><span>Visiteurs suivis aujourd’hui*</span></div>
-    <div class="feature">🟢<b>${onlineUsers}</b><span>Comptes connectés actifs (5 min)</span></div>
+    <div class="feature">👁️<b>${visitsRes.count??0}</b><span>Visites enregistrées aujourd’hui</span></div>
+    <div class="feature">🟢<b>${onlineUsers}</b><span>Comptes actifs (5 min)*</span></div>
    </div>
-   <p class="meta">*Les statistiques commencent après l’installation du SQL ci-joint. Un visiteur correspond à un navigateur suivi par PrixFaso, pas à une mesure parfaite des personnes réelles.</p>
+   <p class="meta">*Le nombre de comptes actifs dépend de la mise à jour de la table user_activity. Les visites comptent les enregistrements dans site_visits, pas les personnes uniques garanties.</p>
    <div class="section"><div class="row"><h3>📢 Modération des annonces</h3><button class="small" onclick="loadAdminDashboard()">↻ Actualiser</button></div>
-   ${all.length?`<div class="msg-list">${all.map(a=>{return `<div class="msg-item"><b>${adminEscape(a.title||"Annonce")}</b><div class="meta">${adminEscape(a.city||"")} · ${money(a.price||0)} · Statut : ${adminEscape(a.status||"active")}</div><div class="row"><button class="small" onclick="adminSetAdStatus('${a.id}','active')">Activer</button><button class="small" onclick="adminSetAdStatus('${a.id}','hidden')">Masquer</button><button class="small" onclick="adminDeleteAd('${a.id}')" style="color:#b91c1c">Supprimer</button></div></div>`}).join("")}</div>`:'<div class="empty">Aucune annonce enregistrée.</div>'}</div>
-   <div class="section"><h3>👤 Comptes utilisateurs</h3>${people.length?`<div class="msg-list">${people.map(p=>`<div class="msg-item"><b>${adminEscape(p.name||"Utilisateur")}</b><div class="meta">ID : ${adminEscape(p.id)} · Téléphone : ${adminEscape(p.phone||"Non renseigné")} · Rôle : ${adminEscape(p.role||"user")}</div></div>`).join("")}</div>`:'<div class="empty">Aucun profil accessible.</div>'}</div>`;
- }catch(e){console.error("Admin PrixFaso:",e);root.innerHTML=`<div class="empty">Impossible de charger l’administration. Vérifie que le script SQL d’installation a été exécuté dans Supabase et que ton profil a le rôle admin.<br><br><small>${adminEscape(e.message||"Erreur inconnue")}</small></div>`}
+   ${all.length?`<div class="msg-list">${all.map(a=>`<div class="msg-item"><b>${adminEscape(a.title||"Annonce")}</b><div class="meta">${adminEscape(a.city||"")} · ${money(a.price||0)} · Statut : ${adminEscape(a.status||"active")}</div><div class="row"><button class="small" onclick="adminSetAdStatus('${a.id}','active')">Activer</button><button class="small" onclick="adminSetAdStatus('${a.id}','hidden')">Masquer</button><button class="small" onclick="adminDeleteAd('${a.id}')" style="color:#b91c1c">Supprimer</button></div></div>`).join("")}</div>`:'<div class="empty">Aucune annonce enregistrée.</div>'}</div>
+   <div class="section"><h3>👤 Comptes utilisateurs</h3>${people.length?`<div class="msg-list">${people.map(p=>`<div class="msg-item"><b>${adminEscape(p.name||"Utilisateur")}</b><div class="meta">ID : ${adminEscape(p.id)} · Téléphone : ${adminEscape(p.phone||"Non renseigné")}</div></div>`).join("")}</div>`:'<div class="empty">Aucun profil accessible.</div>'}</div>`;
+ }catch(e){console.error("Admin PrixFaso:",e);root.innerHTML=`<div class="empty">Impossible de charger l’administration. Vérifie les droits d’accès Supabase (RLS) et la présence des tables site_visits et user_activity.<br><br><small>${adminEscape(e.message||"Erreur inconnue")}</small></div>`}
 }
 async function adminSetAdStatus(id,status){
  if(!current||!isAdmin){toast("Accès refusé");return}
