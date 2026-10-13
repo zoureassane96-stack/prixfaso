@@ -566,16 +566,23 @@ async function trackPrixFasoVisit(){
  try{
   let visitorId=localStorage.getItem("prixfaso_visitor_id");
   if(!visitorId){visitorId=(crypto.randomUUID?crypto.randomUUID():"v-"+Date.now()+"-"+Math.random().toString(36).slice(2));localStorage.setItem("prixfaso_visitor_id",visitorId)}
-  await supabaseClient.rpc("track_site_visit",{p_visitor_id:visitorId});
-  await supabaseClient.rpc("track_site_presence",{p_visitor_id:visitorId});
+  const {error}=await supabaseClient.rpc("track_site_visit",{p_visitor_id:visitorId});
+  if(error)throw error;
  }catch(e){console.warn("Statistiques PrixFaso non disponibles :",e.message||e)}
 }
 async function updatePrixFasoPresence(){
  if(!supabaseClient)return;
  try{
-  const visitorId=localStorage.getItem("prixfaso_visitor_id");if(!visitorId)return;
-  await supabaseClient.rpc("track_site_presence",{p_visitor_id:visitorId});
- }catch(e){console.warn("Présence non actualisée",e.message||e)}
+  // Les visiteurs anonymes sont comptés dans site_visits; seuls les comptes
+  // authentifiés sont inscrits dans user_activity.
+  if(current&&current.id){
+   const {error}=await supabaseClient.from("user_activity").upsert(
+    {user_id:current.id,last_seen:new Date().toISOString()},
+    {onConflict:"user_id"}
+   );
+   if(error)throw error;
+  }
+ }catch(e){console.warn("Présence non actualisée (vérifier les droits RLS de user_activity):",e.message||e)}
 }
 async function loadAdminDashboard(){
  const root=document.getElementById("adminContent");
